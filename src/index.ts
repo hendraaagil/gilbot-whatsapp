@@ -1,7 +1,7 @@
 import qrCode from 'qrcode-terminal';
 import { Client, LocalAuth } from 'whatsapp-web.js';
 
-import { menu, ping, tentang } from './commands';
+import { menu, ping, stiker, tentang } from './commands';
 
 const client = new Client({
   authStrategy: new LocalAuth(),
@@ -28,6 +28,9 @@ client.on('message', async (message) => {
       break;
     case menu.command:
       menu.execute(message, client);
+      break;
+    case stiker.command:
+      stiker.execute(message, client);
       break;
     case tentang.command:
       tentang.execute(message, client);

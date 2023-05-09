@@ -12,7 +12,7 @@ export const menu = {
 
     client.sendMessage(
       message.from,
-      `${greeting}, *${contact.name}*!\n\nDaftar perintah :\n1. *${PREFIX}tentang*, menampilkan informasi pembuat bot\n\nTerima kasih.`
+      `${greeting}, *${contact.name}*!\n\nDaftar perintah :\n1. *${PREFIX}stiker*, membuat stiker dari gambar\n2. *${PREFIX}tentang*, menampilkan informasi pembuat bot\n\nTerima kasih.`
     );
   },
 };
