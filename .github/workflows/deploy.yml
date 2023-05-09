@@ -1,0 +1,25 @@
+name: Deployment
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: CD
+    if: github.repository == 'hendraaagil/gilbot'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and deploy app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd ${{ secrets.APP_DIR_PATH }}
+            git pull origin main
+            export PATH=$PATH:~/.local/share/fnm/node-versions/v16.19.0/installation/bin
+            yarn
+            pm2 restart ecosystem.config.js
