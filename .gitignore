@@ -1,0 +1,6 @@
+# build
+/.wwebjs_auth
+/build
+
+# env
+/node_modules
