@@ -5,6 +5,7 @@ import { menu, ping, stiker, tentang } from './commands';
 
 const client = new Client({
   authStrategy: new LocalAuth(),
+  puppeteer: { args: ['--no-sandbox'] },
 });
 
 client.on('qr', (qr) => {
