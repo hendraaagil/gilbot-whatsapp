@@ -16,12 +16,12 @@ export const stiker = {
         }),
       ]);
 
-      message.react('✅');
-    } else {
-      client.sendMessage(
-        message.from,
-        'Untuk membuat stiker, silahkan kirim gambar disertai caption /stiker'
-      );
+      return message.react('✅');
     }
+
+    client.sendMessage(
+      message.from,
+      'Untuk membuat stiker, silahkan kirim gambar disertai caption /stiker'
+    );
   },
 };
