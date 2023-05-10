@@ -10,7 +10,7 @@ export const menu = {
 
     client.sendMessage(
       message.from,
-      `${greeting}, *${contact.pushname}*!\n\nDaftar perintah yang tersedia :\n1. *${PREFIX}stiker*, membuat stiker dari gambar / gif / video\n2. *${PREFIX}tentang*, menampilkan informasi pembuat bot\n\nTerima kasih.`
+      `${greeting}, *${contact.pushname}*! 👋\n\nDaftar perintah yang tersedia :\n1. *${PREFIX}stiker*, membuat stiker dari gambar / gif / video\n2. *${PREFIX}tentang*, menampilkan informasi pembuat bot\n\nTerima kasih.`
     );
   },
 };

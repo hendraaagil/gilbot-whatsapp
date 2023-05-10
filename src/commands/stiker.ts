@@ -21,7 +21,7 @@ export const stiker = {
 
     client.sendMessage(
       message.from,
-      'Untuk membuat stiker, silahkan kirim gambar disertai caption /stiker'
+      '🤔 Untuk membuat stiker, silahkan kirim gambar / gif / video disertai caption /stiker'
     );
   },
 };

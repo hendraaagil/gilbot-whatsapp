@@ -9,7 +9,7 @@ export const halo = {
 
     client.sendMessage(
       message.from,
-      `${greeting}, *${contact.pushname}*!\n\nSilahkan ketik *${PREFIX}menu* untuk menampilkan daftar perintah yang tersedia.`
+      `${greeting}, *${contact.pushname}*! 👋\n\nSilahkan ketik *${PREFIX}menu* untuk menampilkan daftar perintah yang tersedia.`
     );
   },
 };
