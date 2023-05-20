@@ -1,9 +1,14 @@
+import { PrismaClient } from '@prisma/client';
 import { Client, Message } from 'whatsapp-web.js';
 import { halo, menu, ping, stiker, tentang } from '../commands';
-import { logAction } from '../libs/log';
+import { logMessage } from '../libs/log';
 
-export const listenMessages = async (message: Message, client: Client) => {
-  await logAction(message);
+export const listenMessages = async (
+  message: Message,
+  client: Client,
+  prisma: PrismaClient
+) => {
+  await logMessage(message, prisma);
 
   switch (message.body) {
     case ping.command:

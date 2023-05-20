@@ -1,47 +1,31 @@
-import fs from 'fs';
+import { PrismaClient } from '@prisma/client';
 import { Message } from 'whatsapp-web.js';
 
-const createJsonLog = (name: string, number: string) => {
-  const folderPath = './users';
-  const filePath = folderPath + '/' + number + '.json';
+export const logMessage = async (message: Message, prisma: PrismaClient) => {
+  const { pushname: name, number } = await message.getContact();
 
-  const isUsersFolderExist = fs.existsSync(folderPath);
-  if (!isUsersFolderExist) {
-    fs.mkdirSync(folderPath);
-  }
-
-  const isUserFileExist = fs.existsSync(filePath);
-  if (isUserFileExist) {
-    const userFile = fs.readFileSync(filePath, 'utf-8');
-    let userJson = JSON.parse(userFile);
-    userJson.lastSent = new Date();
-
-    fs.writeFileSync(filePath, JSON.stringify(userJson), 'utf-8');
-  } else {
-    const userData = {
-      name: name,
-      number: number,
-      lastSent: new Date(),
-    };
-
-    fs.writeFile(filePath, JSON.stringify(userData), 'utf-8', (err) => {
-      if (err) {
-        throw err;
-      }
-      console.log(filePath, '>> Created!');
+  let user = await prisma.user.findUnique({
+    where: { number: number },
+    select: { id: true, number: true, name: true },
+  });
+  if (!user) {
+    user = await prisma.user.create({
+      data: { number: number, name: name },
+      select: { id: true, number: true, name: true },
+    });
+  } else if (user.name !== name) {
+    await prisma.user.update({
+      where: { number: number },
+      data: { name: name },
     });
   }
-};
 
-export const logAction = async (message: Message) => {
-  const { pushname: name, number } = await message.getContact();
-  createJsonLog(name, number);
-
-  console.log({
-    sender: name,
-    number: number,
-    message: message.body,
-    deviceType: message.deviceType,
-    hasMedia: message.hasMedia,
+  return prisma.logMessage.create({
+    data: {
+      userId: user.id,
+      deviceType: message.deviceType,
+      hasMedia: message.hasMedia,
+      message: message.body,
+    },
   });
 };
