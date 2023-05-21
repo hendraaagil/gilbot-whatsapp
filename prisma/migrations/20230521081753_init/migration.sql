@@ -15,6 +15,9 @@ CREATE TABLE "users" (
 CREATE TABLE "commands" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "require_lock" BOOLEAN NOT NULL DEFAULT false,
+    "position" INTEGER NOT NULL DEFAULT 1,
     "minute_limit" INTEGER NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -27,6 +30,7 @@ CREATE TABLE "current_commands" (
     "user_id" INTEGER NOT NULL,
     "command_id" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "current_commands_pkey" PRIMARY KEY ("id")
 );

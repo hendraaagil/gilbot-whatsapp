@@ -31,8 +31,11 @@ model User {
 model Command {
   id Int @id @default(autoincrement())
 
-  name        String @unique
-  minuteLimit Int    @default(0) @map("minute_limit")
+  name        String  @unique
+  description String
+  requireLock Boolean @default(false) @map("require_lock")
+  position    Int     @default(1)
+  minuteLimit Int     @default(0) @map("minute_limit")
 
   createdAt        DateTime          @default(now()) @map("created_at")
   currentCommands  CurrentCommand[]
@@ -51,6 +54,7 @@ model CurrentCommand {
   commandId Int?     @map("command_id")
 
   createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("current_commands")
 }
