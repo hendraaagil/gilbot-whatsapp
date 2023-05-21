@@ -11,39 +11,52 @@ import {
   updateCurrentCommand,
   updateLastCommand,
 } from '../libs/command';
+import { checkBanUser } from '../libs/user';
 
 export const listenMessages = async (
   message: Message,
   client: Client,
   prisma: PrismaClient
 ) => {
-  const [command, log] = await Promise.all([
-    findCommand(message.body, prisma),
-    logMessage(message, prisma),
-  ]);
+  try {
+    const [command, log] = await Promise.all([
+      findCommand(message.body, prisma),
+      logMessage(message, prisma),
+    ]);
 
-  const currentCommand = await findCurrentCommand(log.userId, prisma);
-  if (currentCommand) {
-    return executeCurrentCommand(currentCommand, message, client, prisma);
-  }
+    const isBanned = await checkBanUser(log.userId, prisma);
+    if (isBanned) {
+      return client.sendMessage(
+        message.from,
+        '❌ Akun kamu telah diban. Silahkan hubungi pembuat bot.'
+      );
+    }
 
-  if (!command) {
-    return halo.execute(message, client);
-  }
+    const currentCommand = await findCurrentCommand(log.userId, prisma);
+    if (currentCommand) {
+      return executeCurrentCommand(currentCommand, message, client, prisma);
+    }
 
-  const { isExceedLimit } = await checkLimitCommand(
-    log.userId,
-    command,
-    message,
-    client,
-    prisma
-  );
-  if (isExceedLimit) return;
+    if (!command) {
+      return halo.execute(message, client);
+    }
 
-  executeCommand(message, client, prisma);
-  if (command.requireLock) {
-    updateCurrentCommand(log.userId, command.id, prisma);
-  } else {
-    updateLastCommand(log.userId, command.id, prisma);
+    const { isExceedLimit } = await checkLimitCommand(
+      log.userId,
+      command,
+      message,
+      client,
+      prisma
+    );
+    if (isExceedLimit) return;
+
+    executeCommand(message, client, prisma);
+    if (command.requireLock) {
+      updateCurrentCommand(log.userId, command.id, prisma);
+    } else {
+      updateLastCommand(log.userId, command.id, prisma);
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
