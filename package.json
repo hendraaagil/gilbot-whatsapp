@@ -7,7 +7,8 @@
     "build": "rimraf ./build && tsc --outDir ./build",
     "start": "yarn build && node .",
     "dev": "nodemon",
-    "migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^4.14.1",
