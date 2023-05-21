@@ -31,6 +31,8 @@ client.on('change_state', (state) => {
 });
 
 client.on('message', (message) => {
+  if (message.isStatus) return;
+
   listenMessages(message, client, prisma);
 });
 
