@@ -10,7 +10,7 @@ export const logMessage = async (message: Message, prisma: PrismaClient) => {
   });
   if (!user) {
     user = await prisma.user.create({
-      data: { number: number, name: name },
+      data: { number: number, chatId: message.from, name: name },
       select: { id: true, number: true, name: true },
     });
   } else if (user.name !== name) {

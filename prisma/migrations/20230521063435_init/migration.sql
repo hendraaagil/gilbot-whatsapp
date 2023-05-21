@@ -2,6 +2,7 @@
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "number" TEXT NOT NULL,
+    "chat_id" TEXT NOT NULL,
     "name" TEXT,
     "is_banned" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -55,6 +56,9 @@ CREATE TABLE "log_messages" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_number_key" ON "users"("number");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_chat_id_key" ON "users"("chat_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "commands_name_key" ON "commands"("name");
