@@ -12,4 +12,5 @@ export const halo = {
       `${greeting}, *${contact.pushname}*! 👋\n\nSilahkan ketik *${PREFIX}menu* untuk menampilkan daftar perintah yang tersedia.`
     );
   },
+  generate: () => {},
 };

@@ -18,4 +18,5 @@ export const menu = {
       `Daftar perintah yang tersedia :\n${listCommands.join('\n')}`
     );
   },
+  generate: () => {},
 };

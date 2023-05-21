@@ -1,7 +1,7 @@
 import { Command, CurrentCommand, PrismaClient } from '@prisma/client';
 import { differenceInMinutes } from 'date-fns';
 import { Client, Message } from 'whatsapp-web.js';
-import { menu, ping, stiker, tentang } from '../commands';
+import { commands } from '../commands';
 import { PREFIX } from '../constants';
 
 export const findCommand = async (message: string, prisma: PrismaClient) => {
@@ -52,20 +52,11 @@ export const executeCommand = (
   client: Client,
   prisma: PrismaClient
 ) => {
-  switch (message.body) {
-    case ping.command:
-      ping.execute(message, client);
-      break;
-    case menu.command:
-      menu.execute(message, client, prisma);
-      break;
-    case stiker.command:
-      stiker.execute(message, client);
-      break;
-    case tentang.command:
-      tentang.execute(message, client);
-      break;
-  }
+  commands[message.body.slice(PREFIX.length) as keyof typeof commands].execute(
+    message,
+    client,
+    prisma
+  );
 };
 
 export const executeCurrentCommand = async (
@@ -78,11 +69,12 @@ export const executeCurrentCommand = async (
     where: { id: currentCommand.commandId as number },
   });
 
-  switch (PREFIX + command?.name) {
-    case stiker.command:
-      stiker.generate({ currentCommand, message, client, prisma });
-      break;
-  }
+  commands[command?.name as keyof typeof commands].generate({
+    currentCommand,
+    message,
+    client,
+    prisma,
+  });
 };
 
 export const updateCurrentCommand = async (

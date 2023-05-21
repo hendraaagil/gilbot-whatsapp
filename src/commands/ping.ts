@@ -6,4 +6,5 @@ export const ping = {
   execute: (message: Message, client: Client) => {
     client.sendMessage(message.from, '🏓 Pong!');
   },
+  generate: () => {},
 };
