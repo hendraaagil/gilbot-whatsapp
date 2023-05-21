@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Client, Message } from 'whatsapp-web.js';
-import { halo } from '../commands';
+import { commands } from '../commands';
 import { logMessage } from '../libs/log';
 import {
   checkLimitCommand,
@@ -38,7 +38,7 @@ export const listenMessages = async (
     }
 
     if (!command) {
-      return halo.execute(message, client);
+      return commands.halo.execute(message, client);
     }
 
     const { isExceedLimit } = await checkLimitCommand(

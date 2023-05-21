@@ -1,15 +1,16 @@
+import QRCode from 'qrcode';
 import { CurrentCommand, PrismaClient } from '@prisma/client';
-import { Client, Message } from 'whatsapp-web.js';
+import { Client, Message, MessageMedia } from 'whatsapp-web.js';
 import { PREFIX } from '../constants';
 import { resetCurrentCommand, updateLastCommand } from '../libs/command';
 import { menu } from './menu';
 
-export const stiker = {
-  command: PREFIX + 'stiker',
+export const qr = {
+  command: PREFIX + 'qr',
   guide:
-    '🔎 Silahkan kirim gambar / gif / video yang ingin dijadikan stiker.\nKetik *batal* jika ingin membatalkan perintah.',
+    '🔎 Silahkan kirim teks / link yang ingin dijadikan QR.\nKetik *batal* jika ingin membatalkan perintah.',
   execute: async (message: Message, client: Client) => {
-    client.sendMessage(message.from, stiker.guide);
+    client.sendMessage(message.from, qr.guide);
   },
   generate: async (args: {
     currentCommand: CurrentCommand;
@@ -33,16 +34,17 @@ export const stiker = {
       return menu.execute(message, client, prisma);
     }
 
-    if (message.hasMedia) {
-      const image = await message.downloadMedia();
+    if (!message.hasMedia) {
+      const qr = await QRCode.toDataURL(message.body, { width: 1080 });
+      const image = new MessageMedia(
+        'image/png',
+        qr.replace('data:image/png;base64,', ''),
+        'qr.png'
+      );
 
       await Promise.all([
         message.react('⏳'),
-        message.reply(image, message.from, {
-          sendMediaAsSticker: true,
-          stickerName: 'stiker',
-          stickerAuthor: 'GilBot',
-        }),
+        message.reply(image, message.from),
       ]);
 
       await Promise.all([
@@ -54,6 +56,6 @@ export const stiker = {
       return menu.execute(message, client, prisma);
     }
 
-    client.sendMessage(message.from, stiker.guide);
+    client.sendMessage(message.from, qr.guide);
   },
 };
