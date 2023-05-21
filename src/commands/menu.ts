@@ -1,16 +1,21 @@
+import { PrismaClient } from '@prisma/client';
 import { Client, Message } from 'whatsapp-web.js';
-import { GREETINGS, PREFIX } from '../constants';
-import { randomInteger } from '../libs/generate';
+import { PREFIX } from '../constants';
 
 export const menu = {
   command: PREFIX + 'menu',
-  execute: async (message: Message, client: Client) => {
-    const contact = await message.getContact();
-    const greeting = GREETINGS[randomInteger(0, GREETINGS.length - 1)];
+  execute: async (message: Message, client: Client, prisma: PrismaClient) => {
+    const commands = await prisma.command.findMany({
+      orderBy: { position: 'asc' },
+    });
+    const listCommands = commands.map(
+      (command) =>
+        `${command.position}. *${PREFIX}${command.name}*, ${command.description}`
+    );
 
     client.sendMessage(
       message.from,
-      `${greeting}, *${contact.pushname}*! 👋\n\nDaftar perintah yang tersedia :\n1. *${PREFIX}stiker*, membuat stiker dari gambar / gif / video\n2. *${PREFIX}tentang*, menampilkan informasi pembuat bot\n\nTerima kasih.`
+      `Daftar perintah yang tersedia :\n${listCommands.join('\n')}`
     );
   },
 };

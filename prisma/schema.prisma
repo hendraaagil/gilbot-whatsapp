@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  number   String  @unique
+  chatId   String  @unique @map("chat_id")
+  name     String?
+  isBanned Boolean @default(false) @map("is_banned")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  currentCommand   CurrentCommand?
+  lastUsedCommands LastUsedCommand[]
+
+  @@map("users")
+}
+
+model Command {
+  id Int @id @default(autoincrement())
+
+  name        String  @unique
+  description String
+  requireLock Boolean @default(false) @map("require_lock")
+  position    Int     @default(1)
+  minuteLimit Int     @default(0) @map("minute_limit")
+
+  createdAt        DateTime          @default(now()) @map("created_at")
+  currentCommands  CurrentCommand[]
+  lastUsedCommands LastUsedCommand[]
+
+  @@map("commands")
+}
+
+model CurrentCommand {
+  id Int @id @default(autoincrement())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique @map("user_id")
+
+  command   Command? @relation(fields: [commandId], references: [id])
+  commandId Int?     @map("command_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("current_commands")
+}
+
+model LastUsedCommand {
+  id Int @id @default(autoincrement())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @map("user_id")
+
+  command   Command @relation(fields: [commandId], references: [id])
+  commandId Int     @map("command_id")
+
+  usedAt    DateTime @default(now()) @map("used_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("last_used_commands")
+}
+
+model LogMessage {
+  id Int @id @default(autoincrement())
+
+  userId     Int     @map("user_id")
+  message    String?
+  deviceType String? @map("device_type")
+  hasMedia   Boolean @default(false) @map("has_media")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("log_messages")
+}

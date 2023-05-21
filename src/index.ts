@@ -1,10 +1,15 @@
 import qrCode from 'qrcode-terminal';
+import { PrismaClient } from '@prisma/client';
 import { Client, LocalAuth } from 'whatsapp-web.js';
 import { listenMessages } from './events';
 
 const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: { args: ['--no-sandbox'] },
+});
+
+const prisma = new PrismaClient({
+  log: ['info', 'warn', 'error'],
 });
 
 client.on('qr', (qr) => {
@@ -21,8 +26,14 @@ client.on('ready', () => {
   console.log(`Logged in as: ${pushname} | ${user}`);
 });
 
+client.on('change_state', (state) => {
+  console.log('State changed:', state);
+});
+
 client.on('message', (message) => {
-  listenMessages(message, client);
+  if (message.isStatus) return;
+
+  listenMessages(message, client, prisma);
 });
 
 client.initialize();
