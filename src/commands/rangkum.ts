@@ -6,7 +6,10 @@ import { resetCurrentCommand, updateLastCommand } from '../libs/command';
 import { menu } from './menu';
 
 const launchSummarizeWebsite = async (youtubeLink: string) => {
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteer.launch({
+    headless: 'new',
+    args: ['--no-sandbox'],
+  });
   const page = await browser.newPage();
   const summarizeLink = 'https://www.summarize.tech/' + youtubeLink;
 
