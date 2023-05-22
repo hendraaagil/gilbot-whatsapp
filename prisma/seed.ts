@@ -17,6 +17,12 @@ const commands: Prisma.CommandCreateInput[] = [
     requireLock: true,
     minuteLimit: 2,
   },
+  {
+    name: 'rangkum',
+    description: 'merangkum video YouTube ke dalam teks bahasa inggris',
+    requireLock: true,
+    minuteLimit: 15,
+  },
   { name: 'tentang', description: 'menampilkan informasi pembuat bot' },
 ];
 
