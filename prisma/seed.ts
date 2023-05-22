@@ -15,7 +15,7 @@ const commands: Prisma.CommandCreateInput[] = [
     name: 'qr',
     description: 'membuat QR dari teks / link',
     requireLock: true,
-    minuteLimit: 3,
+    minuteLimit: 2,
   },
   { name: 'tentang', description: 'menampilkan informasi pembuat bot' },
 ];

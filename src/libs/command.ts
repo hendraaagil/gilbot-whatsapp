@@ -1,5 +1,5 @@
 import { Command, CurrentCommand, PrismaClient } from '@prisma/client';
-import { differenceInMinutes } from 'date-fns';
+import { differenceInSeconds } from 'date-fns';
 import { Client, Message } from 'whatsapp-web.js';
 import { commands } from '../commands';
 import { PREFIX } from '../constants';
@@ -33,13 +33,27 @@ export const checkLimitCommand = async (
     return { isExceedLimit: false };
   }
 
-  const diff = differenceInMinutes(new Date(), new Date(lastCommand.usedAt));
-  if (diff < command.minuteLimit) {
-    const tryIn = command.minuteLimit - diff;
+  const diff = differenceInSeconds(new Date(), new Date(lastCommand.usedAt));
+  const limitInSeconds = command.minuteLimit * 60;
+  if (diff < limitInSeconds) {
+    const trySeconds = limitInSeconds - diff;
+
+    const diffSeconds = trySeconds % 60;
+    const diffMinutes = (trySeconds - diffSeconds) / 60;
+
+    const tryIn: string[] = [];
+    if (diffMinutes > 0) {
+      tryIn.push(`${diffMinutes} menit`);
+    }
+    if (diffSeconds > 0) {
+      tryIn.push(`${diffSeconds} detik`);
+    }
 
     client.sendMessage(
       message.from,
-      `⏳ Kamu sudah menggunakan perintah tersebut dalam ${command.minuteLimit} menit terakhir.\nSilahkan coba lagi dalam ${tryIn} menit.`
+      `⏳ Kamu sudah menggunakan perintah tersebut dalam ${
+        command.minuteLimit
+      } menit terakhir.\nSilahkan coba lagi dalam ${tryIn.join(' ')}.`
     );
     return { isExceedLimit: true };
   }
