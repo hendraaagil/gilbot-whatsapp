@@ -34,24 +34,21 @@ export const stiker = {
     }
 
     if (message.hasMedia) {
-      const image = await message.downloadMedia();
+      await message.react('⏳');
 
+      const image = await message.downloadMedia();
       await Promise.all([
-        message.react('⏳'),
         message.reply(image, message.from, {
           sendMediaAsSticker: true,
           stickerName: 'stiker',
           stickerAuthor: 'GilBot',
         }),
-      ]);
-
-      await Promise.all([
         message.react('✅'),
         updateLastCommand(userId, commandId as number, prisma),
       ]);
       await resetCurrentCommand(userId, prisma);
 
-      return menu.execute(message, client, prisma);
+      return client.sendMessage(message.from, '✅ Selesai!');
     }
 
     client.sendMessage(message.from, stiker.guide);

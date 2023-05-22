@@ -35,6 +35,8 @@ export const qr = {
     }
 
     if (!message.hasMedia) {
+      await message.react('⏳');
+
       const qr = await QRCode.toDataURL(message.body, { width: 1080 });
       const image = new MessageMedia(
         'image/png',
@@ -43,17 +45,13 @@ export const qr = {
       );
 
       await Promise.all([
-        message.react('⏳'),
         message.reply(image, message.from),
-      ]);
-
-      await Promise.all([
         message.react('✅'),
         updateLastCommand(userId, commandId as number, prisma),
       ]);
       await resetCurrentCommand(userId, prisma);
 
-      return menu.execute(message, client, prisma);
+      return client.sendMessage(message.from, '✅ Selesai!');
     }
 
     client.sendMessage(message.from, qr.guide);
