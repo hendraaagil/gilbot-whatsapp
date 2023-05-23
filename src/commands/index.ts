@@ -6,6 +6,7 @@ import { ping } from './ping';
 import { qr } from './qr';
 import { rangkum } from './rangkum';
 import { receh } from './receh';
+import { sholat } from './sholat';
 import { stiker } from './stiker';
 import { tentang } from './tentang';
 
@@ -18,6 +19,7 @@ export const commands = {
   qr,
   rangkum,
   receh,
+  sholat,
   stiker,
   tentang,
 };

@@ -5,6 +5,11 @@ const prisma = new PrismaClient();
 const commands: Prisma.CommandCreateInput[] = [
   { name: 'menu', description: 'menampilkan daftar perintah bot' },
   { name: 'ping', description: 'ping bot' },
+  {
+    name: 'sholat',
+    description: 'cari jadwal sholat berdasarkan lokasi',
+    requireLock: true,
+  },
   { name: 'kucing', description: 'minta gambar kucing' },
   { name: 'receh', description: 'minta receh bang', minuteLimit: 1 },
   {
@@ -45,7 +50,6 @@ async function main() {
         await prisma.command.update({
           where: { name: command.name },
           data: {
-            name: command.name,
             description: command.description,
             minuteLimit: command.minuteLimit,
             requireLock: command.requireLock,
