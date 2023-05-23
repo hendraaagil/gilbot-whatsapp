@@ -6,6 +6,8 @@ import { randomInteger } from '../libs/generate';
 export const receh = {
   command: PREFIX + 'receh',
   execute: async (message: Message, client: Client) => {
+    await client.sendMessage(message.from, '🔎 Lagi nyari receh...');
+
     const types = ['text', 'image'];
     const type = types[randomInteger(0, types.length - 1)];
     const response = await axios.get(
