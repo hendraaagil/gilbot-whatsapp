@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 const commands: Prisma.CommandCreateInput[] = [
   { name: 'menu', description: 'menampilkan daftar perintah bot' },
   { name: 'ping', description: 'ping bot' },
+  { name: 'receh', description: 'minta receh bang', minuteLimit: 1 },
   {
     name: 'stiker',
     description: 'membuat stiker dari gambar / gif / video',

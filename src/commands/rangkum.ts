@@ -65,14 +65,15 @@ export const rangkum = {
     );
 
     if (isValid) {
-      const result = [text, `Read more: ${summarizeLink}`];
+      const result = [text, `Baca lebih lanjut: ${summarizeLink}`];
       await Promise.all([
         message.reply(result.join('\n\n'), message.from),
         message.react('✅'),
         updateLastCommand(userId, commandId as number, prisma),
       ]);
 
-      return resetCurrentCommand(userId, prisma);
+      await resetCurrentCommand(userId, prisma);
+      return client.sendMessage(message.from, '✅ Selesai!');
     }
 
     await message.react('❌');
