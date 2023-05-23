@@ -15,7 +15,7 @@ export const menu = {
 
     client.sendMessage(
       message.from,
-      `Daftar perintah yang tersedia :\n${listCommands.join('\n')}`
+      `📃 Daftar perintah yang tersedia :\n\n${listCommands.join('\n')}`
     );
   },
   generate: () => {},
