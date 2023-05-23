@@ -1,4 +1,5 @@
 import { halo } from './halo';
+import { kucing } from './kucing';
 import { mahasiswa } from './mahasiswa';
 import { menu } from './menu';
 import { ping } from './ping';
@@ -10,6 +11,7 @@ import { tentang } from './tentang';
 
 export const commands = {
   halo,
+  kucing,
   mahasiswa,
   menu,
   ping,
