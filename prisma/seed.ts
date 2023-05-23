@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 const commands: Prisma.CommandCreateInput[] = [
   { name: 'menu', description: 'menampilkan daftar perintah bot' },
   { name: 'ping', description: 'ping bot' },
+  { name: 'kucing', description: 'minta gambar kucing' },
   { name: 'receh', description: 'minta receh bang', minuteLimit: 1 },
   {
     name: 'stiker',
@@ -36,23 +37,32 @@ const commands: Prisma.CommandCreateInput[] = [
 async function main() {
   await Promise.all(
     commands.map(async (command, index) => {
-      await prisma.command.upsert({
+      const isExist = await prisma.command.findUnique({
         where: { name: command.name },
-        create: {
-          name: command.name,
-          description: command.description,
-          minuteLimit: command.minuteLimit,
-          requireLock: command.requireLock,
-          position: index + 1,
-        },
-        update: {
-          name: command.name,
-          description: command.description,
-          minuteLimit: command.minuteLimit,
-          requireLock: command.requireLock,
-          position: index + 1,
-        },
       });
+
+      if (isExist) {
+        await prisma.command.update({
+          where: { name: command.name },
+          data: {
+            name: command.name,
+            description: command.description,
+            minuteLimit: command.minuteLimit,
+            requireLock: command.requireLock,
+            position: index + 1,
+          },
+        });
+      } else {
+        await prisma.command.create({
+          data: {
+            name: command.name,
+            description: command.description,
+            minuteLimit: command.minuteLimit,
+            requireLock: command.requireLock,
+            position: index + 1,
+          },
+        });
+      }
     })
   );
 }
