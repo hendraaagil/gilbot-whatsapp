@@ -5,7 +5,11 @@ import { listenMessages } from './events';
 
 const client = new Client({
   authStrategy: new LocalAuth(),
-  puppeteer: { args: ['--no-sandbox'] },
+  puppeteer: {
+    args: ['--no-sandbox'],
+    // executablePath:
+    //   'C://Program Files//Google//Chrome//Application//chrome.exe',
+  },
 });
 
 const prisma = new PrismaClient({

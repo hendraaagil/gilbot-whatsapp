@@ -11,6 +11,7 @@ import { receh } from './receh';
 import { sholat } from './sholat';
 import { stiker } from './stiker';
 import { tentang } from './tentang';
+import { tiktok } from './tiktok';
 
 export const commands = {
   bagikan,
@@ -26,4 +27,5 @@ export const commands = {
   sholat,
   stiker,
   tentang,
+  tiktok,
 };

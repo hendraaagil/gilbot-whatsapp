@@ -9,3 +9,6 @@ ecosystem.config.js
 
 # data
 /users
+
+# error log
+*error.log

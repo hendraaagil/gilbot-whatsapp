@@ -30,6 +30,12 @@ const commands: Prisma.CommandCreateInput[] = [
     minuteLimit: 2,
   },
   {
+    name: 'tiktok',
+    description: 'download video TikTok tanpa watermark',
+    requireLock: true,
+    minuteLimit: 10,
+  },
+  {
     name: 'rangkum',
     description: 'merangkum video YouTube ke dalam teks bahasa inggris',
     requireLock: true,
