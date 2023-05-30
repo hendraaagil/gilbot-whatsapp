@@ -85,12 +85,13 @@ export const tiktok = {
         unsafeMime: true,
       });
 
+      await message.reply('✅', message.from, {
+        sendMediaAsDocument: true,
+        caption: result.videoTitle,
+        media: video,
+      });
+
       await Promise.all([
-        message.reply('✅', message.from, {
-          sendMediaAsDocument: true,
-          caption: result.videoTitle,
-          media: video,
-        }),
         message.react('✅'),
         updateLastCommand(userId, commandId as number, prisma),
       ]);
