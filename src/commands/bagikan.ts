@@ -4,7 +4,7 @@ import { PREFIX } from '../constants';
 export const bagikan = {
   command: PREFIX + 'bagikan',
   execute: async (message: Message, client: Client) => {
-    const image = MessageMedia.fromFilePath('./src/assets/og-image.png');
+    const image = MessageMedia.fromFilePath('./src/assets/qr-bot.jpg');
 
     client.sendMessage(
       message.from,
