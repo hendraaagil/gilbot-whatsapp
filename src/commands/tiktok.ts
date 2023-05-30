@@ -81,7 +81,7 @@ export const tiktok = {
 
     if (result.isSuccess) {
       const video = await MessageMedia.fromUrl(result.videoUrl as string, {
-        filename: result.videoTitle?.slice(0, 100),
+        filename: result.videoTitle?.slice(0, 100) + '.mp4',
         unsafeMime: true,
       });
 
