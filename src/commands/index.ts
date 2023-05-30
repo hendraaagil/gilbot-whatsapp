@@ -1,3 +1,4 @@
+import { bagikan } from './bagikan';
 import { halo } from './halo';
 import { kucing } from './kucing';
 import { mahasiswa } from './mahasiswa';
@@ -11,6 +12,7 @@ import { stiker } from './stiker';
 import { tentang } from './tentang';
 
 export const commands = {
+  bagikan,
   halo,
   kucing,
   mahasiswa,

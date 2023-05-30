@@ -36,6 +36,10 @@ const commands: Prisma.CommandCreateInput[] = [
     requireLock: true,
     minuteLimit: 2,
   },
+  {
+    name: 'bagikan',
+    description: 'berikan link bot ini kepada yang membutuhkan',
+  },
   { name: 'tentang', description: 'menampilkan informasi pembuat bot' },
 ];
 
