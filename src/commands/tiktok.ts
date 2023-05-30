@@ -11,9 +11,12 @@ const downloadVideo = async (
 ): Promise<{
   isSuccess: boolean;
   message: string;
-  videoId?: number;
-  videoTitle?: string;
-  videoUrl?: string;
+  video?: {
+    authorId: string;
+    id: number;
+    title: string;
+    url: string;
+  };
 }> => {
   try {
     const response = await axios.get(
@@ -23,9 +26,12 @@ const downloadVideo = async (
     return {
       isSuccess: true,
       message: '✅ Selesai!',
-      videoId: response.data.id,
-      videoTitle: response.data.title,
-      videoUrl: response.data.video.noWatermark,
+      video: {
+        authorId: response.data.author.unique_id,
+        id: response.data.id,
+        title: response.data.title,
+        url: response.data.video.noWatermark,
+      },
     };
   } catch (error: any) {
     console.log('Link:', link);
@@ -80,15 +86,17 @@ export const tiktok = {
     console.log('FETCH TikTok >>', result);
 
     if (result.isSuccess) {
-      const video = await MessageMedia.fromUrl(result.videoUrl as string, {
-        filename: result.videoTitle?.slice(0, 100) + '.mp4',
+      const { video } = result;
+      const title = video?.id + '_' + (video?.authorId as string);
+      const videoMedia = await MessageMedia.fromUrl(video?.url as string, {
+        filename: title + '.mp4',
         unsafeMime: true,
       });
 
       await message.reply('✅', message.from, {
         sendMediaAsDocument: true,
-        caption: result.videoTitle,
-        media: video,
+        caption: title,
+        media: videoMedia,
       });
 
       await Promise.all([

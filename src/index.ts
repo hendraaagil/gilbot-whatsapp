@@ -7,8 +7,6 @@ const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
     args: ['--no-sandbox'],
-    // executablePath:
-    //   'C://Program Files//Google//Chrome//Application//chrome.exe',
   },
 });
 
