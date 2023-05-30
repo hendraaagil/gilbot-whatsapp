@@ -6,6 +6,11 @@ const commands: Prisma.CommandCreateInput[] = [
   { name: 'menu', description: 'menampilkan daftar perintah bot' },
   { name: 'ping', description: 'ping bot' },
   {
+    name: 'hitung',
+    description: 'menghitung operasi matematika sederhana',
+    requireLock: true,
+  },
+  {
     name: 'sholat',
     description: 'cari jadwal sholat berdasarkan lokasi',
     requireLock: true,
