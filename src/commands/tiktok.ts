@@ -101,11 +101,11 @@ export const tiktok = {
 
       await Promise.all([
         message.react('✅'),
+        client.sendMessage(message.from, result.message),
         updateLastCommand(userId, commandId as number, prisma),
       ]);
 
-      await resetCurrentCommand(userId, prisma);
-      return client.sendMessage(message.from, result.message);
+      return resetCurrentCommand(userId, prisma);
     }
 
     await Promise.all([
