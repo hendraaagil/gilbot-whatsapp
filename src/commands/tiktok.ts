@@ -93,7 +93,7 @@ export const tiktok = {
         unsafeMime: true,
       });
 
-      await message.reply('✅', message.from, {
+      await message.reply(title, message.from, {
         sendMediaAsDocument: true,
         caption: title,
         media: videoMedia,
