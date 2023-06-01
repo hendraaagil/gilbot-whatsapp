@@ -1,13 +1,16 @@
-import axios from 'axios';
 import { CurrentCommand, PrismaClient } from '@prisma/client';
 import { format, formatISO } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { Client, Message } from 'whatsapp-web.js';
 
+import axios from '../libs/axios';
 import { PREFIX } from '../constants';
-import { resetCurrentCommand, updateLastCommand } from '../libs/command';
+import {
+  checkCancelCommand,
+  resetCurrentCommand,
+  updateLastCommand,
+} from '../libs/command';
 import { toTitleCase } from '../libs/format';
-import { menu } from './menu';
 
 type Schedule = {
   tanggal: string;
@@ -57,14 +60,20 @@ const getSchedule = async (locationInput: string) => {
     scheduleString +=
       'Sumber data : https://github.com/lakuapik/jadwalsholatorg';
 
-    return scheduleString;
+    return { isSuccess: true, data: scheduleString };
   } catch (error: any) {
     console.log('Location:', locationInput);
     console.error(error?.response?.data);
     if (error?.response?.status === 404) {
-      return `⚠ Jadwal lokasi *${locationInput}* tidak ditemukan!`;
+      return {
+        isSuccess: false,
+        data: `⚠️ Jadwal lokasi *${locationInput}* tidak ditemukan!`,
+      };
     }
-    return `⚠ Mohon maaf, terdapat kesalahan pengambilan data.`;
+    return {
+      isSuccess: false,
+      data: `⚠️ Mohon maaf, terdapat kesalahan pengambilan data.`,
+    };
   }
 };
 
@@ -88,22 +97,29 @@ export const sholat = {
       prisma,
     } = args;
 
-    if (message.body.toLowerCase() === 'batal') {
-      await Promise.all([
-        client.sendMessage(message.from, '❌ Perintah dibatalkan.'),
-        resetCurrentCommand(userId, prisma),
-      ]);
-
-      return menu.execute(message, client, prisma);
-    }
+    const isCancelled = await checkCancelCommand(
+      userId,
+      message,
+      client,
+      prisma
+    );
+    if (isCancelled) return;
 
     await message.react('⏳');
-    const schedule = await getSchedule(message.body);
-    await Promise.all([
-      message.reply(schedule, message.from),
-      message.react('✅'),
-      updateLastCommand(userId, commandId as number, prisma),
-    ]);
-    return resetCurrentCommand(userId, prisma);
+    const { data, isSuccess } = await getSchedule(message.body);
+
+    if (isSuccess) {
+      await Promise.all([
+        message.reply(data, message.from),
+        message.react('✅'),
+        updateLastCommand(userId, commandId as number, prisma),
+      ]);
+
+      await resetCurrentCommand(userId, prisma);
+      return client.sendMessage(message.from, '✅ Selesai!');
+    }
+
+    await Promise.all([message.reply(data, message.from), message.react('❌')]);
+    return client.sendMessage(message.from, sholat.guide);
   },
 };

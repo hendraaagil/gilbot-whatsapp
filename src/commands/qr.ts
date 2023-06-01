@@ -1,9 +1,13 @@
 import QRCode from 'qrcode';
 import { CurrentCommand, PrismaClient } from '@prisma/client';
 import { Client, Message, MessageMedia } from 'whatsapp-web.js';
+
 import { PREFIX } from '../constants';
-import { resetCurrentCommand, updateLastCommand } from '../libs/command';
-import { menu } from './menu';
+import {
+  checkCancelCommand,
+  resetCurrentCommand,
+  updateLastCommand,
+} from '../libs/command';
 
 export const qr = {
   command: PREFIX + 'qr',
@@ -25,14 +29,13 @@ export const qr = {
       prisma,
     } = args;
 
-    if (message.body.toLowerCase() === 'batal') {
-      await Promise.all([
-        client.sendMessage(message.from, '❌ Perintah dibatalkan.'),
-        resetCurrentCommand(userId, prisma),
-      ]);
-
-      return menu.execute(message, client, prisma);
-    }
+    const isCancelled = await checkCancelCommand(
+      userId,
+      message,
+      client,
+      prisma
+    );
+    if (isCancelled) return;
 
     if (!message.hasMedia) {
       await message.react('⏳');
@@ -49,8 +52,8 @@ export const qr = {
         message.react('✅'),
         updateLastCommand(userId, commandId as number, prisma),
       ]);
-      await resetCurrentCommand(userId, prisma);
 
+      await resetCurrentCommand(userId, prisma);
       return client.sendMessage(message.from, '✅ Selesai!');
     }
 

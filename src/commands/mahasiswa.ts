@@ -1,9 +1,13 @@
-import axios from 'axios';
 import { CurrentCommand, PrismaClient } from '@prisma/client';
-import { Client, Message, MessageMedia } from 'whatsapp-web.js';
+import { Client, Message } from 'whatsapp-web.js';
+
+import axios from '../libs/axios';
 import { PREFIX } from '../constants';
-import { resetCurrentCommand, updateLastCommand } from '../libs/command';
-import { menu } from './menu';
+import {
+  checkCancelCommand,
+  resetCurrentCommand,
+  updateLastCommand,
+} from '../libs/command';
 import { toTitleCase } from '../libs/format';
 
 const searchStudent = async (name: string) => {
@@ -41,6 +45,7 @@ const searchStudent = async (name: string) => {
 
     return students;
   } catch (error: any) {
+    console.error(error);
     return [];
   }
 };
@@ -65,20 +70,20 @@ export const mahasiswa = {
       prisma,
     } = args;
 
-    if (message.body.toLowerCase() === 'batal') {
-      await Promise.all([
-        client.sendMessage(message.from, '❌ Perintah dibatalkan.'),
-        resetCurrentCommand(userId, prisma),
-      ]);
-
-      return menu.execute(message, client, prisma);
-    }
+    const isCancelled = await checkCancelCommand(
+      userId,
+      message,
+      client,
+      prisma
+    );
+    if (isCancelled) return;
 
     await message.react('⏳');
+
     const students = await searchStudent(message.body);
     let studentString = '';
     if (!students.length) {
-      studentString += 'Mahasiswa tidak ditemukan!';
+      studentString += '⚠️ Mahasiswa tidak ditemukan!';
     } else {
       studentString += `📝 *Menampilkan ${students.length} hasil.*\n\n`;
 

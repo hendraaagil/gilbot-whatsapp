@@ -1,10 +1,13 @@
-import axios from 'axios';
 import { CurrentCommand, PrismaClient } from '@prisma/client';
 import { Client, Message, MessageMedia } from 'whatsapp-web.js';
 
+import axios from '../libs/axios';
 import { PREFIX } from '../constants';
-import { resetCurrentCommand, updateLastCommand } from '../libs/command';
-import { menu } from './menu';
+import {
+  checkCancelCommand,
+  resetCurrentCommand,
+  updateLastCommand,
+} from '../libs/command';
 
 const downloadVideo = async (
   link: string
@@ -71,19 +74,16 @@ export const tiktok = {
       prisma,
     } = args;
 
-    if (message.body.toLowerCase() === 'batal') {
-      await Promise.all([
-        client.sendMessage(message.from, '❌ Perintah dibatalkan.'),
-        resetCurrentCommand(userId, prisma),
-      ]);
-
-      return menu.execute(message, client, prisma);
-    }
+    const isCancelled = await checkCancelCommand(
+      userId,
+      message,
+      client,
+      prisma
+    );
+    if (isCancelled) return;
 
     await message.react('⏳');
-
     const result = await downloadVideo(message.body);
-    console.log('FETCH TikTok >>', result);
 
     if (result.isSuccess) {
       const { video } = result;

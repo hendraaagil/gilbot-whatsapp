@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { Client, Message, MessageMedia } from 'whatsapp-web.js';
 import { PREFIX } from '../constants';
+import axios from '../libs/axios';
 
 export const kucing = {
   command: PREFIX + 'kucing',

@@ -3,8 +3,11 @@ import { evaluate } from 'mathjs';
 import { Client, Message } from 'whatsapp-web.js';
 
 import { PREFIX } from '../constants';
-import { resetCurrentCommand, updateLastCommand } from '../libs/command';
-import { menu } from './menu';
+import {
+  checkCancelCommand,
+  resetCurrentCommand,
+  updateLastCommand,
+} from '../libs/command';
 
 export const hitung = {
   command: PREFIX + 'hitung',
@@ -26,34 +29,36 @@ export const hitung = {
       prisma,
     } = args;
 
-    if (message.body.toLowerCase() === 'batal') {
-      await Promise.all([
-        client.sendMessage(message.from, '❌ Perintah dibatalkan.'),
-        resetCurrentCommand(userId, prisma),
-      ]);
-
-      return menu.execute(message, client, prisma);
-    }
+    const isCancelled = await checkCancelCommand(
+      userId,
+      message,
+      client,
+      prisma
+    );
+    if (isCancelled) return;
 
     await message.react('⏳');
 
-    let resultString = '';
     try {
       const result: number = evaluate(message.body);
-      resultString = result.toLocaleString();
 
-      await message.react('✅');
+      await Promise.all([
+        await message.react('✅'),
+        message.reply(result.toLocaleString(), message.from),
+        updateLastCommand(userId, commandId as number, prisma),
+      ]);
+      await client.sendMessage(message.from, '✅ Selesai!');
+
+      return resetCurrentCommand(userId, prisma);
     } catch (error) {
       console.error(error);
-      resultString = 'Angka tidak valid!';
 
-      await message.react('❌');
+      await Promise.all([
+        message.react('❌'),
+        message.reply('⚠️ Angka tidak valid!', message.from),
+      ]);
+
+      return client.sendMessage(message.from, hitung.guide);
     }
-
-    await Promise.all([
-      message.reply(resultString, message.from),
-      updateLastCommand(userId, commandId as number, prisma),
-    ]);
-    return resetCurrentCommand(userId, prisma);
   },
 };

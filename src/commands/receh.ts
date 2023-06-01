@@ -1,5 +1,6 @@
-import axios from 'axios';
 import { Client, Message, MessageMedia } from 'whatsapp-web.js';
+
+import axios from '../libs/axios';
 import { PREFIX } from '../constants';
 import { randomInteger } from '../libs/generate';
 

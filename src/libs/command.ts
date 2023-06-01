@@ -61,6 +61,26 @@ export const checkLimitCommand = async (
   return { isExceedLimit: false };
 };
 
+export const checkCancelCommand = async (
+  userId: number,
+  message: Message,
+  client: Client,
+  prisma: PrismaClient
+) => {
+  let isCancelled = false;
+
+  if (message.body.toLowerCase() === 'batal') {
+    isCancelled = true;
+    await Promise.all([
+      client.sendMessage(message.from, '❌ Perintah dibatalkan.'),
+      resetCurrentCommand(userId, prisma),
+    ]);
+    await commands.menu.execute(message, client, prisma);
+  }
+
+  return isCancelled;
+};
+
 export const executeCommand = (
   message: Message,
   client: Client,

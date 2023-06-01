@@ -1,9 +1,13 @@
 import puppeteer from 'puppeteer';
 import { CurrentCommand, PrismaClient } from '@prisma/client';
 import { Client, Message } from 'whatsapp-web.js';
+
 import { PREFIX } from '../constants';
-import { resetCurrentCommand, updateLastCommand } from '../libs/command';
-import { menu } from './menu';
+import {
+  checkCancelCommand,
+  resetCurrentCommand,
+  updateLastCommand,
+} from '../libs/command';
 
 const launchSummarizeWebsite = async (youtubeLink: string) => {
   const browser = await puppeteer.launch({
@@ -50,14 +54,13 @@ export const rangkum = {
       prisma,
     } = args;
 
-    if (message.body.toLowerCase() === 'batal') {
-      await Promise.all([
-        client.sendMessage(message.from, '❌ Perintah dibatalkan.'),
-        resetCurrentCommand(userId, prisma),
-      ]);
-
-      return menu.execute(message, client, prisma);
-    }
+    const isCancelled = await checkCancelCommand(
+      userId,
+      message,
+      client,
+      prisma
+    );
+    if (isCancelled) return;
 
     await message.react('⏳');
     const { isValid, text, summarizeLink } = await launchSummarizeWebsite(
@@ -76,7 +79,13 @@ export const rangkum = {
       return client.sendMessage(message.from, '✅ Selesai!');
     }
 
-    await message.react('❌');
+    await Promise.all([
+      message.reply(
+        '⚠️ Link tidak valid / video tidak dapat dirangkum.',
+        message.from
+      ),
+      message.react('❌'),
+    ]);
     client.sendMessage(message.from, rangkum.guide);
   },
 };
