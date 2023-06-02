@@ -6,6 +6,7 @@ import { mahasiswa } from './mahasiswa';
 import { menu } from './menu';
 import { ping } from './ping';
 import { qr } from './qr';
+import { quote } from './quote';
 import { rangkum } from './rangkum';
 import { receh } from './receh';
 import { sholat } from './sholat';
@@ -22,6 +23,7 @@ export const commands = {
   menu,
   ping,
   qr,
+  quote,
   rangkum,
   receh,
   sholat,
