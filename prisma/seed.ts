@@ -36,12 +36,12 @@ const commands: Prisma.CommandCreateInput[] = [
     requireLock: true,
     minuteLimit: 10,
   },
-  {
-    name: 'upscale',
-    description: 'meningkatkan resolusi gambar',
-    requireLock: true,
-    minuteLimit: 10,
-  },
+  // {
+  //   name: 'upscale',
+  //   description: 'meningkatkan resolusi gambar',
+  //   requireLock: true,
+  //   minuteLimit: 10,
+  // },
   {
     name: 'rangkum',
     description: 'merangkum video YouTube ke dalam teks bahasa inggris',
