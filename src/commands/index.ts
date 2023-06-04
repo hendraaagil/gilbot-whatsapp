@@ -13,6 +13,7 @@ import { sholat } from './sholat';
 import { stiker } from './stiker';
 import { tentang } from './tentang';
 import { tiktok } from './tiktok';
+import { upscale } from './upscale';
 
 export const commands = {
   bagikan,
@@ -30,4 +31,5 @@ export const commands = {
   stiker,
   tentang,
   tiktok,
+  upscale,
 };
