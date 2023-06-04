@@ -25,65 +25,78 @@ export const upscale = {
     client: Client;
     prisma: PrismaClient;
   }) => {
-    const {
-      currentCommand: { commandId, userId },
-      message,
-      client,
-      prisma,
-    } = args;
+    try {
+      const {
+        currentCommand: { commandId, userId },
+        message,
+        client,
+        prisma,
+      } = args;
 
-    const isCancelled = await checkCancelCommand(
-      userId,
-      message,
-      client,
-      prisma
-    );
-    if (isCancelled) return;
+      const isCancelled = await checkCancelCommand(
+        userId,
+        message,
+        client,
+        prisma
+      );
+      if (isCancelled) return;
 
-    if (message.hasMedia) {
-      const [senderMedia] = await Promise.all([
-        message.downloadMedia(),
-        message.react('⏳'),
-      ]);
-
-      const isSupported = checkSupportedImageExtension(senderMedia.mimetype);
-      if (!isSupported) {
-        await Promise.all([
-          message.react('❌'),
-          message.reply(`⚠️ Ekstensi file tidak didukung!`, message.from),
+      if (message.hasMedia) {
+        const [senderMedia] = await Promise.all([
+          message.downloadMedia(),
+          message.react('⏳'),
         ]);
-        return client.sendMessage(message.from, upscale.guide);
+
+        const isSupported = checkSupportedImageExtension(senderMedia.mimetype);
+        if (!isSupported) {
+          await Promise.all([
+            message.react('❌'),
+            message.reply(`⚠️ Ekstensi file tidak didukung!`, message.from),
+          ]);
+          return client.sendMessage(message.from, upscale.guide);
+        }
+
+        const imgExtension = getImageExtension(senderMedia.mimetype);
+        const filename =
+          senderMedia.filename || userId + '_' + Date.now() + imgExtension;
+        const sourcePath = join(__dirname, '..', '..', 'waifu2x', filename);
+        const destPath = join(
+          __dirname,
+          '..',
+          '..',
+          'waifu2x',
+          '2x_' + filename
+        );
+
+        waifu2x.chmod777(
+          join(__dirname, '..', '..', 'node_modules/waifu2x/waifu2x'),
+          join(__dirname, '..', '..', 'node_modules/waifu2x/webp'),
+          join(__dirname, '..', '..', 'node_modules/waifu2x/real-esrgan')
+        );
+        fs.writeFileSync(sourcePath, senderMedia.data, 'base64');
+        await waifu2x.upscaleImage(sourcePath, destPath, {
+          upscaler: 'real-esrgan',
+          scale: 2,
+        });
+
+        const upscaledMedia = MessageMedia.fromFilePath(destPath);
+        await message.reply(upscaledMedia, message.from, {
+          sendMediaAsDocument: true,
+        });
+        await Promise.all([
+          message.react('✅'),
+          updateLastCommand(userId, commandId as number, prisma),
+        ]);
+
+        fs.unlinkSync(sourcePath);
+        fs.unlinkSync(destPath);
+        await resetCurrentCommand(userId, prisma);
+        return client.sendMessage(message.from, '✅ Selesai!');
       }
 
-      const imgExtension = getImageExtension(senderMedia.mimetype);
-      const filename =
-        senderMedia.filename || userId + '_' + Date.now() + imgExtension;
-      const sourcePath = join(__dirname, '..', '..', 'waifu2x', filename);
-      const destPath = join(__dirname, '..', '..', 'waifu2x', '2x_' + filename);
-
-      waifu2x.chmod777(
-        join(__dirname, '..', '..', 'node_modules/waifu2x/waifu2x'),
-        join(__dirname, '..', '..', 'node_modules/waifu2x/webp'),
-        join(__dirname, '..', '..', 'node_modules/waifu2x/real-esrgan')
-      );
-      fs.writeFileSync(sourcePath, senderMedia.data, 'base64');
-      await waifu2x.upscaleImage(sourcePath, destPath);
-
-      const upscaledMedia = MessageMedia.fromFilePath(destPath);
-      await message.reply(upscaledMedia, message.from, {
-        sendMediaAsDocument: true,
-      });
-      await Promise.all([
-        message.react('✅'),
-        updateLastCommand(userId, commandId as number, prisma),
-      ]);
-
-      fs.unlinkSync(sourcePath);
-      fs.unlinkSync(destPath);
-      await resetCurrentCommand(userId, prisma);
-      return client.sendMessage(message.from, '✅ Selesai!');
+      return client.sendMessage(message.from, upscale.guide);
+    } catch (err) {
+      console.error(err);
     }
-
-    return client.sendMessage(message.from, upscale.guide);
   },
 };
