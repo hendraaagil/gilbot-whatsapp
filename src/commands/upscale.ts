@@ -57,8 +57,8 @@ export const upscale = {
       const imgExtension = getImageExtension(senderMedia.mimetype);
       const filename =
         senderMedia.filename || userId + '_' + Date.now() + imgExtension;
-      const sourcePath = 'waifu2x/' + filename;
-      const destPath = 'waifu2x/' + '2x_' + filename;
+      const sourcePath = './waifu2x/' + filename;
+      const destPath = './waifu2x/' + '2x_' + filename;
 
       await fs.writeFile(sourcePath, senderMedia.data, 'base64');
       await waifu2x.upscaleImage(sourcePath, destPath, {
