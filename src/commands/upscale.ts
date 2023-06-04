@@ -62,9 +62,9 @@ export const upscale = {
       const destPath = join(__dirname, '..', '..', 'waifu2x', '2x_' + filename);
 
       waifu2x.chmod777(
-        'node_modules/waifu2x/waifu2x',
-        'node_modules/waifu2x/webp',
-        'node_modules/waifu2x/real-esrgan/linux'
+        join(__dirname, '..', '..', 'node_modules/waifu2x/waifu2x'),
+        join(__dirname, '..', '..', 'node_modules/waifu2x/webp'),
+        join(__dirname, '..', '..', 'node_modules/waifu2x/real-esrgan/linux')
       );
       await fs.writeFile(sourcePath, senderMedia.data, 'base64');
       await waifu2x.upscaleImage(sourcePath, destPath, {
