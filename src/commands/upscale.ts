@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import waifu2x from 'waifu2x';
+import { join } from 'path';
 import { CurrentCommand, PrismaClient } from '@prisma/client';
 import { Client, Message, MessageMedia } from 'whatsapp-web.js';
 
@@ -57,8 +58,8 @@ export const upscale = {
       const imgExtension = getImageExtension(senderMedia.mimetype);
       const filename =
         senderMedia.filename || userId + '_' + Date.now() + imgExtension;
-      const sourcePath = './waifu2x/' + filename;
-      const destPath = './waifu2x/' + '2x_' + filename;
+      const sourcePath = join(__dirname, '..', '..', 'waifu2x', filename);
+      const destPath = join(__dirname, '..', '..', 'waifu2x', '2x_' + filename);
 
       await fs.writeFile(sourcePath, senderMedia.data, 'base64');
       await waifu2x.upscaleImage(sourcePath, destPath, {
