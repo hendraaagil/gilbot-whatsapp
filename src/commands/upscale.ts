@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from 'fs';
 import waifu2x from 'waifu2x';
 import { join } from 'path';
 import { CurrentCommand, PrismaClient } from '@prisma/client';
@@ -66,7 +66,7 @@ export const upscale = {
         join(__dirname, '..', '..', 'node_modules/waifu2x/webp'),
         join(__dirname, '..', '..', 'node_modules/waifu2x/real-esrgan')
       );
-      await fs.writeFile(sourcePath, senderMedia.data, 'base64');
+      fs.writeFileSync(sourcePath, senderMedia.data, 'base64');
       await waifu2x.upscaleImage(sourcePath, destPath, {
         upscaler: 'real-esrgan',
         scale: 2,
@@ -81,8 +81,8 @@ export const upscale = {
         updateLastCommand(userId, commandId as number, prisma),
       ]);
 
-      fs.unlink(sourcePath);
-      fs.unlink(destPath);
+      fs.unlinkSync(sourcePath);
+      fs.unlinkSync(destPath);
       await resetCurrentCommand(userId, prisma);
       return client.sendMessage(message.from, '✅ Selesai!');
     }
