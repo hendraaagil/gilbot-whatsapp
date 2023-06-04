@@ -61,8 +61,8 @@ export const upscale = {
       const sourcePath = join(__dirname, '..', '..', 'waifu2x', filename);
       const destPath = join(__dirname, '..', '..', 'waifu2x', '2x_' + filename);
 
+      waifu2x.chmod777(join(__dirname, '..', '..', 'waifu2x'));
       await fs.writeFile(sourcePath, senderMedia.data, 'base64');
-      waifu2x.chmod777();
       await waifu2x.upscaleImage(sourcePath, destPath, {
         upscaler: 'real-esrgan',
         scale: 2,
