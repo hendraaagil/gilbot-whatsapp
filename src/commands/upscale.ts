@@ -62,7 +62,14 @@ export const upscale = {
       const destPath = join(__dirname, '..', '..', 'waifu2x', '2x_' + filename);
 
       await fs.writeFile(sourcePath, senderMedia.data, 'base64');
-      await waifu2x.upscaleImage(sourcePath, destPath);
+      try {
+        await waifu2x.upscaleImage(sourcePath, destPath, {
+          upscaler: 'real-esrgan',
+          scale: 2,
+        });
+      } catch (error) {
+        console.error(error);
+      }
 
       const upscaledMedia = MessageMedia.fromFilePath(destPath);
       await message.reply(upscaledMedia, message.from, {
