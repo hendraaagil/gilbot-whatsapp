@@ -42,7 +42,7 @@ const getSchedule = async (locationInput: string) => {
     const { shubuh, terbit, dzuhur, ashr, magrib, isya } = schedule;
 
     let scheduleString = `🕜 *Jadwal Sholat Daerah ${toTitleCase(
-      location
+      locationInput
     )}*\n\n`;
     scheduleString += `*Hari, Tanggal :* ${format(
       new Date(currentDate),
