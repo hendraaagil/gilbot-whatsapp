@@ -29,7 +29,7 @@ const getSchedule = async (locationInput: string) => {
     const year = new Date().getFullYear();
     const month = format(new Date(), 'MM');
     const currentDate = formatISO(new Date(), { representation: 'date' });
-    const location = locationInput.split(' ').join('').toLowerCase();
+    const location = locationInput.replace(/\s/g, '').toLowerCase();
 
     const response = await axios.get(
       `https://raw.githubusercontent.com/lakuapik/jadwalsholatorg/master/adzan/${location}/${year}/${month}.json`
