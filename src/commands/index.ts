@@ -1,6 +1,7 @@
 import { bagikan } from './bagikan';
 import { halo } from './halo';
 import { hitung } from './hitung';
+import { insta } from './insta';
 import { kucing } from './kucing';
 import { mahasiswa } from './mahasiswa';
 import { menu } from './menu';
@@ -19,6 +20,7 @@ export const commands = {
   bagikan,
   halo,
   hitung,
+  insta,
   kucing,
   mahasiswa,
   menu,

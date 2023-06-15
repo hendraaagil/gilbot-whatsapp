@@ -31,17 +31,17 @@ const commands: Prisma.CommandCreateInput[] = [
     minuteLimit: 2,
   },
   {
+    name: 'insta',
+    description: 'download video / reel / gambar Instagram',
+    requireLock: true,
+    minuteLimit: 10,
+  },
+  {
     name: 'tiktok',
     description: 'download video TikTok tanpa watermark',
     requireLock: true,
     minuteLimit: 10,
   },
-  // {
-  //   name: 'upscale',
-  //   description: 'meningkatkan resolusi gambar',
-  //   requireLock: true,
-  //   minuteLimit: 10,
-  // },
   {
     name: 'rangkum',
     description: 'merangkum video YouTube ke dalam teks bahasa inggris',
