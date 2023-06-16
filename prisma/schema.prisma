@@ -86,3 +86,13 @@ model LogMessage {
 
   @@map("log_messages")
 }
+
+model Credit {
+  id        Int      @id @default(autoincrement())
+  name      String
+  link      String   @unique
+  position  Int      @default(1)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("credits")
+}

@@ -1,67 +1,11 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { commands } from './data/commands';
+import { credits } from './data/credits';
 
 const prisma = new PrismaClient();
 
-const commands: Prisma.CommandCreateInput[] = [
-  { name: 'menu', description: 'menampilkan daftar perintah bot' },
-  { name: 'ping', description: 'ping bot' },
-  { name: 'kucing', description: 'minta gambar kucing' },
-  { name: 'quote', description: 'minta quote bang' },
-  { name: 'receh', description: 'minta receh bang', minuteLimit: 1 },
-  {
-    name: 'sholat',
-    description: 'cari jadwal sholat berdasarkan lokasi',
-    requireLock: true,
-  },
-  {
-    name: 'hitung',
-    description: 'menghitung operasi matematika sederhana',
-    requireLock: true,
-  },
-  {
-    name: 'stiker',
-    description: 'membuat stiker dari gambar / gif / video',
-    requireLock: true,
-    minuteLimit: 3,
-  },
-  {
-    name: 'qr',
-    description: 'membuat QR dari teks / link',
-    requireLock: true,
-    minuteLimit: 2,
-  },
-  {
-    name: 'insta',
-    description: 'download video / reel / gambar Instagram',
-    requireLock: true,
-    minuteLimit: 10,
-  },
-  {
-    name: 'tiktok',
-    description: 'download video TikTok tanpa watermark',
-    requireLock: true,
-    minuteLimit: 10,
-  },
-  {
-    name: 'rangkum',
-    description: 'merangkum video YouTube ke dalam teks bahasa inggris',
-    requireLock: true,
-    minuteLimit: 15,
-  },
-  {
-    name: 'mahasiswa',
-    description: 'cari data mahasiswa berdasarkan nama',
-    requireLock: true,
-    minuteLimit: 2,
-  },
-  {
-    name: 'bagikan',
-    description: 'berikan link bot ini kepada yang membutuhkan',
-  },
-  { name: 'tentang', description: 'menampilkan informasi pembuat bot' },
-];
-
 async function main() {
+  // Commands
   await Promise.all(
     commands.map(async (command, index) => {
       const isExist = await prisma.command.findUnique({
@@ -85,6 +29,33 @@ async function main() {
             description: command.description,
             minuteLimit: command.minuteLimit,
             requireLock: command.requireLock,
+            position: index + 1,
+          },
+        });
+      }
+    })
+  );
+
+  // Credits
+  await Promise.all(
+    credits.map(async (credit, index) => {
+      const isExist = await prisma.credit.findUnique({
+        where: { link: credit.link },
+      });
+
+      if (isExist) {
+        await prisma.credit.update({
+          where: { link: credit.link },
+          data: {
+            name: credit.name,
+            position: index + 1,
+          },
+        });
+      } else {
+        await prisma.credit.create({
+          data: {
+            name: credit.name,
+            link: credit.link,
             position: index + 1,
           },
         });
