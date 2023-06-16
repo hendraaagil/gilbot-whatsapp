@@ -56,7 +56,7 @@ export const instaSave = async (
 
       const matchHref = href.match(/\/([^\s\?]+)/) as RegExpMatchArray;
       const domain = matchHref[1].split('/')[1];
-      const type = domain === 'scontent.cdninstagram.com' ? 'image' : 'video';
+      const type = domain === 'snapxcdn.com' ? 'video' : 'image';
 
       items.push({
         name: identifier + '_' + count,
@@ -66,6 +66,7 @@ export const instaSave = async (
 
       count++;
     }
+    // console.log('instaSave() items >>', items);
 
     await browser.close();
 
