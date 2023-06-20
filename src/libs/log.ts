@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import { Message } from 'whatsapp-web.js';
+import prisma from './prisma';
 
-export const logMessage = async (message: Message, prisma: PrismaClient) => {
+export const logMessage = async (message: Message) => {
   const { pushname: name, number } = await message.getContact();
 
   let user = await prisma.user.findUnique({

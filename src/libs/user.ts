@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from './prisma';
 
-export const checkBanUser = async (userId: number, prisma: PrismaClient) => {
+export const checkBanUser = async (userId: number) => {
   let isBanned = false;
 
   const user = await prisma.user.findUnique({

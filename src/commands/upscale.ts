@@ -1,7 +1,7 @@
 import fs from 'fs';
 import waifu2x from 'waifu2x';
 import { join } from 'path';
-import { CurrentCommand, PrismaClient } from '@prisma/client';
+import { CurrentCommand } from '@prisma/client';
 import { Client, Message, MessageMedia } from 'whatsapp-web.js';
 
 import { PREFIX } from '../constants';
@@ -23,22 +23,15 @@ export const upscale = {
     currentCommand: CurrentCommand;
     message: Message;
     client: Client;
-    prisma: PrismaClient;
   }) => {
     try {
       const {
         currentCommand: { commandId, userId },
         message,
         client,
-        prisma,
       } = args;
 
-      const isCancelled = await checkCancelCommand(
-        userId,
-        message,
-        client,
-        prisma
-      );
+      const isCancelled = await checkCancelCommand(userId, message, client);
       if (isCancelled) return;
 
       if (message.hasMedia) {
@@ -83,15 +76,16 @@ export const upscale = {
         await message.reply(upscaledMedia, message.from, {
           sendMediaAsDocument: true,
         });
+
         await Promise.all([
           message.react('✅'),
-          updateLastCommand(userId, commandId as number, prisma),
+          client.sendMessage(message.from, '✅ Selesai!'),
+          updateLastCommand(userId, commandId as number),
         ]);
 
         fs.unlinkSync(sourcePath);
         fs.unlinkSync(destPath);
-        await resetCurrentCommand(userId, prisma);
-        return client.sendMessage(message.from, '✅ Selesai!');
+        return resetCurrentCommand(userId);
       }
 
       return client.sendMessage(message.from, upscale.guide);

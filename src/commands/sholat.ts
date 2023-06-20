@@ -1,4 +1,4 @@
-import { CurrentCommand, PrismaClient } from '@prisma/client';
+import { CurrentCommand } from '@prisma/client';
 import { format, formatISO } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { Client, Message } from 'whatsapp-web.js';
@@ -88,21 +88,14 @@ export const sholat = {
     currentCommand: CurrentCommand;
     message: Message;
     client: Client;
-    prisma: PrismaClient;
   }) => {
     const {
       currentCommand: { commandId, userId },
       message,
       client,
-      prisma,
     } = args;
 
-    const isCancelled = await checkCancelCommand(
-      userId,
-      message,
-      client,
-      prisma
-    );
+    const isCancelled = await checkCancelCommand(userId, message, client);
     if (isCancelled) return;
 
     await message.react('⏳');
@@ -111,12 +104,15 @@ export const sholat = {
     if (isSuccess) {
       await Promise.all([
         message.reply(data, message.from),
-        message.react('✅'),
-        updateLastCommand(userId, commandId as number, prisma),
+        updateLastCommand(userId, commandId as number),
       ]);
 
-      await resetCurrentCommand(userId, prisma);
-      return client.sendMessage(message.from, '✅ Selesai!');
+      await Promise.all([
+        message.react('✅'),
+        client.sendMessage(message.from, '✅ Selesai!'),
+      ]);
+
+      return resetCurrentCommand(userId);
     }
 
     await Promise.all([message.reply(data, message.from), message.react('❌')]);

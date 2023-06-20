@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import { CurrentCommand, PrismaClient } from '@prisma/client';
+import { CurrentCommand } from '@prisma/client';
 import { Client, Message } from 'whatsapp-web.js';
 
 import { PREFIX } from '../constants';
@@ -45,21 +45,14 @@ export const rangkum = {
     currentCommand: CurrentCommand;
     message: Message;
     client: Client;
-    prisma: PrismaClient;
   }) => {
     const {
       currentCommand: { commandId, userId },
       message,
       client,
-      prisma,
     } = args;
 
-    const isCancelled = await checkCancelCommand(
-      userId,
-      message,
-      client,
-      prisma
-    );
+    const isCancelled = await checkCancelCommand(userId, message, client);
     if (isCancelled) return;
 
     await message.react('⏳');
@@ -71,12 +64,15 @@ export const rangkum = {
       const result = [text, `Baca lebih lanjut: ${summarizeLink}`];
       await Promise.all([
         message.reply(result.join('\n\n'), message.from),
-        message.react('✅'),
-        updateLastCommand(userId, commandId as number, prisma),
+        updateLastCommand(userId, commandId as number),
       ]);
 
-      await resetCurrentCommand(userId, prisma);
-      return client.sendMessage(message.from, '✅ Selesai!');
+      await Promise.all([
+        message.react('✅'),
+        client.sendMessage(message.from, '✅ Selesai!'),
+      ]);
+
+      return resetCurrentCommand(userId);
     }
 
     await Promise.all([

@@ -1,19 +1,22 @@
-import { Command, CurrentCommand, PrismaClient } from '@prisma/client';
+import { Command, CurrentCommand } from '@prisma/client';
 import { differenceInSeconds } from 'date-fns';
 import { Client, Message } from 'whatsapp-web.js';
+
+import prisma from './prisma';
 import { commands } from '../commands';
 import { PREFIX } from '../constants';
 
-export const findCommand = async (message: string, prisma: PrismaClient) => {
+export const findCommand = async (message: string) => {
+  if (message.slice(0, 1) !== PREFIX) {
+    return null;
+  }
+
   return await prisma.command.findUnique({
     where: { name: message.slice(PREFIX.length) },
   });
 };
 
-export const findCurrentCommand = async (
-  userId: number,
-  prisma: PrismaClient
-) => {
+export const findCurrentCommand = async (userId: number) => {
   return await prisma.currentCommand.findFirst({
     where: { userId: userId, NOT: { commandId: null } },
   });
@@ -23,8 +26,7 @@ export const checkLimitCommand = async (
   userId: number,
   command: Command,
   message: Message,
-  client: Client,
-  prisma: PrismaClient
+  client: Client
 ) => {
   const lastCommand = await prisma.lastUsedCommand.findFirst({
     where: { userId: userId, commandId: command.id },
@@ -64,8 +66,7 @@ export const checkLimitCommand = async (
 export const checkCancelCommand = async (
   userId: number,
   message: Message,
-  client: Client,
-  prisma: PrismaClient
+  client: Client
 ) => {
   let isCancelled = false;
 
@@ -73,31 +74,25 @@ export const checkCancelCommand = async (
     isCancelled = true;
     await Promise.all([
       client.sendMessage(message.from, '❌ Perintah dibatalkan.'),
-      resetCurrentCommand(userId, prisma),
+      resetCurrentCommand(userId),
     ]);
-    await commands.menu.execute(message, client, prisma);
+    await commands.menu.execute(message, client);
   }
 
   return isCancelled;
 };
 
-export const executeCommand = (
-  message: Message,
-  client: Client,
-  prisma: PrismaClient
-) => {
+export const executeCommand = (message: Message, client: Client) => {
   commands[message.body.slice(PREFIX.length) as keyof typeof commands].execute(
     message,
-    client,
-    prisma
+    client
   );
 };
 
 export const executeCurrentCommand = async (
   currentCommand: CurrentCommand,
   message: Message,
-  client: Client,
-  prisma: PrismaClient
+  client: Client
 ) => {
   const command = await prisma.command.findUnique({
     where: { id: currentCommand.commandId as number },
@@ -107,14 +102,12 @@ export const executeCurrentCommand = async (
     currentCommand,
     message,
     client,
-    prisma,
   });
 };
 
 export const updateCurrentCommand = async (
   userId: number,
-  commandId: number,
-  prisma: PrismaClient
+  commandId: number
 ) => {
   const currentCommand = await prisma.currentCommand.findFirst({
     where: { userId: userId },
@@ -131,21 +124,14 @@ export const updateCurrentCommand = async (
   });
 };
 
-export const resetCurrentCommand = async (
-  userId: number,
-  prisma: PrismaClient
-) => {
+export const resetCurrentCommand = async (userId: number) => {
   return await prisma.currentCommand.update({
     where: { userId: userId },
     data: { commandId: null },
   });
 };
 
-export const updateLastCommand = async (
-  userId: number,
-  commandId: number,
-  prisma: PrismaClient
-) => {
+export const updateLastCommand = async (userId: number, commandId: number) => {
   const criteria = { userId: userId, commandId: commandId };
 
   const lastCommand = await prisma.lastUsedCommand.findFirst({

@@ -1,4 +1,4 @@
-import { CurrentCommand, PrismaClient } from '@prisma/client';
+import { CurrentCommand } from '@prisma/client';
 import {
   Client,
   Message,
@@ -59,21 +59,14 @@ export const insta = {
     currentCommand: CurrentCommand;
     message: Message;
     client: Client;
-    prisma: PrismaClient;
   }) => {
     const {
       currentCommand: { commandId, userId },
       message,
       client,
-      prisma,
     } = args;
 
-    const isCancelled = await checkCancelCommand(
-      userId,
-      message,
-      client,
-      prisma
-    );
+    const isCancelled = await checkCancelCommand(userId, message, client);
     if (isCancelled) return;
 
     await message.react('⏳');
@@ -110,10 +103,10 @@ export const insta = {
       await Promise.all([
         message.react('✅'),
         client.sendMessage(message.from, result.message),
-        updateLastCommand(userId, commandId as number, prisma),
+        updateLastCommand(userId, commandId as number),
       ]);
 
-      return resetCurrentCommand(userId, prisma);
+      return resetCurrentCommand(userId);
     }
 
     await Promise.all([

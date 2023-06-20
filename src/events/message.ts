@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import { Client, Message } from 'whatsapp-web.js';
 import { commands } from '../commands';
 import { logMessage } from '../libs/log';
@@ -13,18 +12,14 @@ import {
 } from '../libs/command';
 import { checkBanUser } from '../libs/user';
 
-export const listenMessages = async (
-  message: Message,
-  client: Client,
-  prisma: PrismaClient
-) => {
+export const listenMessages = async (message: Message, client: Client) => {
   try {
     const [command, log] = await Promise.all([
-      findCommand(message.body, prisma),
-      logMessage(message, prisma),
+      findCommand(message.body),
+      logMessage(message),
     ]);
 
-    const isBanned = await checkBanUser(log.userId, prisma);
+    const isBanned = await checkBanUser(log.userId);
     if (isBanned) {
       return client.sendMessage(
         message.from,
@@ -32,9 +27,9 @@ export const listenMessages = async (
       );
     }
 
-    const currentCommand = await findCurrentCommand(log.userId, prisma);
+    const currentCommand = await findCurrentCommand(log.userId);
     if (currentCommand) {
-      return executeCurrentCommand(currentCommand, message, client, prisma);
+      return executeCurrentCommand(currentCommand, message, client);
     }
 
     if (!command) {
@@ -45,16 +40,15 @@ export const listenMessages = async (
       log.userId,
       command,
       message,
-      client,
-      prisma
+      client
     );
     if (isExceedLimit) return;
 
-    executeCommand(message, client, prisma);
+    executeCommand(message, client);
     if (command.requireLock) {
-      updateCurrentCommand(log.userId, command.id, prisma);
+      updateCurrentCommand(log.userId, command.id);
     } else {
-      updateLastCommand(log.userId, command.id, prisma);
+      updateLastCommand(log.userId, command.id);
     }
   } catch (error) {
     console.error(error);
