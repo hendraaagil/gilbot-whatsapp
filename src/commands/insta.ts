@@ -51,7 +51,7 @@ const downloadVideo = async (
 export const insta = {
   command: PREFIX + 'insta',
   guide:
-    '🔎 Silahkan kirim link Instagram yang ingin didownload.\nKetik *batal* jika ingin membatalkan perintah.',
+    '🔎 Silahkan kirim link reel / post Instagram yang ingin didownload.\nKetik *batal* jika ingin membatalkan perintah.',
   execute: async (message: Message, client: Client) => {
     client.sendMessage(message.from, insta.guide);
   },

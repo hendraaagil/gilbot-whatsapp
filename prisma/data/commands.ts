@@ -30,7 +30,7 @@ export const commands: Prisma.CommandCreateInput[] = [
   },
   {
     name: 'insta',
-    description: 'download video / reel / gambar Instagram',
+    description: 'download reel / post Instagram',
     requireLock: true,
     minuteLimit: 10,
   },
