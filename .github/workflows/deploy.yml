@@ -26,4 +26,4 @@ jobs:
             yarn prisma:generate
             yarn prisma:seed
             pm2 restart ecosystem.config.js
-            curl -X POST -d {} {{ secrets.NETLIFY_BUILD_HOOKS }}
+            curl -X POST -d {} ${{ secrets.NETLIFY_BUILD_HOOKS }}
