@@ -8,7 +8,7 @@ export const bagikan = {
 
     client.sendMessage(
       message.from,
-      `Bagikan link bot ini kepada yang membutuhkan 🫡\nhttps://gilbot.hendraaagil.dev`,
+      `Bagikan bot ini kepada yang membutuhkan 🫡\nhttps://gilbot.hendraaagil.dev`,
       { media: image }
     );
   },

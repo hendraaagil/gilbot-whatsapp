@@ -8,7 +8,7 @@ export const tentang = {
 
     client.sendMessage(
       message.from,
-      `Pembuat bot ini adalah Hendra Agil. Kalian bisa kunjungi lebih lanjut di: https://hendraaagil.dev/about 😎\n\nKalian juga bisa donasi untuk membantu biaya server bot ini: https://saweria.co/hendraaagil 🤘`,
+      `Pembuat bot ini adalah Hendra Agil. Kamu bisa cari tau lebih lanjut di: https://hendraaagil.dev/about 😎\n\nKamu juga bisa donasi untuk membantu biaya server bot ini: https://saweria.co/hendraaagil 🤘`,
       { media: image }
     );
   },
