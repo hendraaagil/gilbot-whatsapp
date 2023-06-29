@@ -20,7 +20,7 @@ export const commands: Prisma.CommandCreateInput[] = [
     name: 'stiker',
     description: 'membuat stiker dari gambar / gif / video',
     requireLock: true,
-    minuteLimit: 3,
+    minuteLimit: 2,
   },
   {
     name: 'qr',

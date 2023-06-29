@@ -12,7 +12,7 @@ import {
 export const hitung = {
   command: PREFIX + 'hitung',
   guide:
-    '🔎 Silahkan ketik operasi matematika yang ingin dihiung.\nKetik *batal* jika ingin membatalkan perintah.',
+    '🔎 Silahkan ketik operasi matematika yang ingin dihiung. Gunakan *.* untuk desimal.\n_Contoh operasi: *12 + 3.4*_\n---\nKetik *batal* jika ingin membatalkan perintah.',
   execute: async (message: Message, client: Client) => {
     client.sendMessage(message.from, hitung.guide);
   },
