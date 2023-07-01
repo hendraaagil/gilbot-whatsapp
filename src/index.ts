@@ -33,4 +33,9 @@ client.on('message', (message) => {
   listenMessages(message, client);
 });
 
+client.on('call', (call) => {
+  console.log(`Call from: ${call.from}}`);
+  call.reject();
+});
+
 client.initialize();
