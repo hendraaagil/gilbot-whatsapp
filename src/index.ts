@@ -34,7 +34,7 @@ client.on('message', (message) => {
 });
 
 client.on('call', (call) => {
-  console.log(`Call from: ${call.from}}`);
+  console.log(`Call from: ${call.from}`);
   call.reject();
 });
 
