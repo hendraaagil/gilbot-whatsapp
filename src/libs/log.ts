@@ -2,7 +2,12 @@ import { Message } from 'whatsapp-web.js';
 import prisma from './prisma';
 
 export const logMessage = async (message: Message) => {
-  const { pushname: name, number } = await message.getContact();
+  const contact = await message.getContact();
+  const {
+    pushname: name,
+    id: { user: userNumber },
+  } = contact;
+  const number = contact.number || userNumber;
 
   let user = await prisma.user.findUnique({
     where: { number: number },

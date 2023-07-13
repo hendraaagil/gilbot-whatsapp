@@ -23,7 +23,7 @@ export const listenMessages = async (message: Message, client: Client) => {
     if (isBanned) {
       return client.sendMessage(
         message.from,
-        '❌ Akun kamu telah diban. Silahkan hubungi pembuat bot. https://t.me/hendraaagil'
+        '❌ Akun kamu telah diban, karena *melanggar rules*.\nhttps://gilbot.hendraaagil.dev/rules\n---\nSilahkan hubungi pembuat bot. https://t.me/hendraaagil'
       );
     }
 
