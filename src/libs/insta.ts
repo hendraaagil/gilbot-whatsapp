@@ -42,7 +42,8 @@ export const instaSave = async (
     await page.click('button[type="submit"]');
 
     await page.waitForSelector(
-      '#download-section .download-items .download-items__btn > a'
+      '#download-section .download-items .download-items__btn > a',
+      { timeout: 0 }
     );
 
     const items: InstaResult[] = [];
