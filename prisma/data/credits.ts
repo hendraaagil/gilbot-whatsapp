@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 
 export const credits: Prisma.CreditCreateInput[] = [
   { name: 'TiklyDown API', link: 'https://api.tiklydown.me/' },
+  { name: 'Threads API', link: 'https://threads.junho.io/' },
   { name: 'The Cat API', link: 'https://thecatapi.com/' },
   { name: 'Candaan API', link: 'https://candaan-api.vercel.app/' },
   { name: 'KyokoAPI', link: 'https://kyoko.rei.my.id/' },
