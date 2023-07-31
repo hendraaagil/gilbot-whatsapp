@@ -5,6 +5,7 @@ import { Client, Message } from 'whatsapp-web.js';
 import prisma from './prisma';
 import { commands } from '../commands';
 import { PREFIX } from '../constants';
+import { toLowerCase } from './format';
 
 export const findCommand = async (message: string) => {
   if (message.slice(0, 1) !== PREFIX) {
@@ -12,7 +13,7 @@ export const findCommand = async (message: string) => {
   }
 
   return await prisma.command.findUnique({
-    where: { name: message.slice(PREFIX.length) },
+    where: { name: toLowerCase(message.slice(PREFIX.length)) },
   });
 };
 
@@ -83,10 +84,9 @@ export const checkCancelCommand = async (
 };
 
 export const executeCommand = (message: Message, client: Client) => {
-  commands[message.body.slice(PREFIX.length) as keyof typeof commands].execute(
-    message,
-    client
-  );
+  commands[
+    toLowerCase(message.body.slice(PREFIX.length)) as keyof typeof commands
+  ].execute(message, client);
 };
 
 export const executeCurrentCommand = async (

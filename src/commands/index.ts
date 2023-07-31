@@ -16,6 +16,7 @@ import { tentang } from './tentang';
 import { threads } from './threads';
 import { tiktok } from './tiktok';
 import { upscale } from './upscale';
+import { waifu } from './waifu';
 
 export const commands = {
   bagikan,
@@ -36,4 +37,5 @@ export const commands = {
   threads,
   tiktok,
   upscale,
+  waifu,
 };

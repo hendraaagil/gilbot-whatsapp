@@ -5,6 +5,7 @@ export const commands: Prisma.CommandCreateInput[] = [
   { name: 'ping', description: 'ping bot' },
   { name: 'kucing', description: 'minta gambar kucing' },
   { name: 'quote', description: 'minta quote bang' },
+  { name: 'waifu', description: 'minta waifu bang' },
   { name: 'receh', description: 'minta receh bang', minuteLimit: 1 },
   {
     name: 'sholat',
