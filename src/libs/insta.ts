@@ -43,7 +43,7 @@ export const instaSave = async (
 
     await page.waitForSelector(
       '#download-section .download-items .download-items__btn > a',
-      { timeout: 0 }
+      { timeout: 60000 }
     );
 
     const items: InstaResult[] = [];
