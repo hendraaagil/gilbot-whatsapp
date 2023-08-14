@@ -30,6 +30,7 @@ export const instaSave = async (
     const browser = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox'],
+      protocolTimeout: 360000,
     });
     const page = await browser.newPage();
 
