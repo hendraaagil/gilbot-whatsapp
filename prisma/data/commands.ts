@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 export const commands: Prisma.CommandCreateInput[] = [
   { name: 'menu', description: 'menampilkan daftar perintah bot' },
   { name: 'ping', description: 'ping bot' },
+  { name: 'gempa', description: 'informasi gempa terbaru' },
   { name: 'kucing', description: 'minta gambar kucing' },
   { name: 'quote', description: 'minta quote bang' },
   { name: 'waifu', description: 'minta waifu bang' },

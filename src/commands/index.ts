@@ -1,4 +1,5 @@
 import { bagikan } from './bagikan';
+import { gempa } from './gempa';
 import { halo } from './halo';
 import { hitung } from './hitung';
 import { insta } from './insta';
@@ -20,6 +21,7 @@ import { waifu } from './waifu';
 
 export const commands = {
   bagikan,
+  gempa,
   halo,
   hitung,
   insta,
