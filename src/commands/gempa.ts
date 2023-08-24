@@ -1,6 +1,4 @@
 import { Client, Message, MessageMedia } from 'whatsapp-web.js';
-import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
 import { PREFIX } from '../constants';
 import axios from '../libs/axios';
 
@@ -20,9 +18,9 @@ export const gempa = {
     } = response.data;
 
     const text = [
-      `📆 ${format(new Date(gempa.DateTime), 'PPPP', { locale: id })}`,
+      `📆 ${gempa.Tanggal}, ${gempa.Jam}`,
       `🚨 ${gempa.Magnitude} SR / ${gempa.Kedalaman}`,
-      `📍 ${gempa.Wilayah} (${gempa.Lintang}, ${gempa.Bujur})`,
+      `📍 ${gempa.Wilayah}`,
       `🗺️ ${mapsUrl}${gempa.Coordinates}`,
       `🔗 ${bmkgUrl}`,
     ].join('\n');
