@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer';
+import puppeteer, { Browser } from 'puppeteer';
 import { InstaResult } from '../types/insta';
 
 export const instaSave = async (
@@ -7,6 +7,8 @@ export const instaSave = async (
   isValid: boolean;
   data?: InstaResult[];
 }> => {
+  let browser: Browser | null = null;
+
   try {
     const matchLink = link.match(/\/([^\s\?]+)/);
     if (!matchLink) {
@@ -27,7 +29,7 @@ export const instaSave = async (
       return { isValid: false };
     }
 
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox'],
       protocolTimeout: 360000,
@@ -75,6 +77,10 @@ export const instaSave = async (
     return { isValid: true, data: items };
   } catch (error) {
     console.error(error);
+
+    if (browser) {
+      await browser.close();
+    }
     throw error;
   }
 };
