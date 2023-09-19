@@ -8,33 +8,46 @@ import {
   resetCurrentCommand,
   updateLastCommand,
 } from '../libs/command';
+import type { ApiTiklyDownResponse } from '../types/tiktok';
+
+enum MediaType {
+  Image = 'image',
+  Video = 'video',
+}
 
 const downloadVideo = async (
   link: string
 ): Promise<{
   isSuccess: boolean;
   message: string;
-  video?: {
+  data?: {
     authorId: string;
     id: number;
     title: string;
-    url: string;
+    type: MediaType;
+    video: string;
+    images: string[];
   };
 }> => {
   try {
-    const response = await axios.get(
+    const response = await axios.get<ApiTiklyDownResponse>(
       'https://api.tiklydown.me/api/download?url=' + link
     );
+    const data = {
+      authorId: response.data.author.unique_id,
+      id: response.data.id,
+      title: response.data.title,
+      type: response.data.video ? MediaType.Video : MediaType.Image,
+      video: response.data.video ? response.data.video.noWatermark : '',
+      images: response.data.images
+        ? response.data.images.map((image) => image.url)
+        : [],
+    };
 
     return {
       isSuccess: true,
       message: '✅ Selesai!',
-      video: {
-        authorId: response.data.author.unique_id,
-        id: response.data.id,
-        title: response.data.title,
-        url: response.data.video.noWatermark,
-      },
+      data: data,
     };
   } catch (error: any) {
     console.log('Link:', link);
@@ -79,18 +92,31 @@ export const tiktok = {
     const result = await downloadVideo(message.body);
 
     if (result.isSuccess) {
-      const { video } = result;
-      const title = video?.id + '_' + (video?.authorId as string);
-      const videoMedia = await MessageMedia.fromUrl(video?.url as string, {
-        filename: title + '.mp4',
-        unsafeMime: true,
-      });
+      const { data } = result;
+      if (data?.type === MediaType.Video && data.video) {
+        const title = data.id + '_' + (data.authorId as string);
+        const videoMedia = await MessageMedia.fromUrl(data.video as string, {
+          filename: title + '.mp4',
+          unsafeMime: true,
+        });
 
-      await message.reply(title, message.from, {
-        sendMediaAsDocument: true,
-        caption: title,
-        media: videoMedia,
-      });
+        await message.reply(title, message.from, {
+          sendMediaAsDocument: true,
+          caption: title,
+          media: videoMedia,
+        });
+      } else if (data?.images) {
+        for (let i = 0; i < data.images.length; i++) {
+          const image = data.images[i];
+          const media = await MessageMedia.fromUrl(image, { unsafeMime: true });
+
+          if (i < 1) {
+            await message.reply(media, message.from);
+          } else {
+            await client.sendMessage(message.from, media);
+          }
+        }
+      }
 
       await Promise.all([
         message.react('✅'),
