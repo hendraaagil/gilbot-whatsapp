@@ -6,8 +6,8 @@ export const credits: Prisma.CreditCreateInput[] = [
   { name: 'Threads API', link: 'https://threads.junho.io/' },
   { name: 'The Cat API', link: 'https://thecatapi.com/' },
   { name: 'Candaan API', link: 'https://candaan-api.vercel.app/' },
-  { name: 'KyokoAPI', link: 'https://kyoko.rei.my.id/' },
   { name: 'SnapSave', link: 'https://snapsave.app/download-video-instagram' },
+  { name: 'waifu.pics', link: 'https://waifu.pics/' },
   {
     name: 'jadwalsholatorg',
     link: 'https://github.com/lakuapik/jadwalsholatorg',

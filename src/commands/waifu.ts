@@ -6,14 +6,12 @@ export const waifu = {
   command: PREFIX + 'waifu',
   execute: async (message: Message, client: Client) => {
     const [response] = await Promise.all([
-      axios.get('https://kyoko.rei.my.id/api/sfw.php'),
+      axios.get('https://api.waifu.pics/sfw/waifu'),
       client.sendMessage(message.from, '🔎 Lagi nyari waifu...'),
     ]);
-    const {
-      apiResult: { url },
-    } = response.data;
+    const { url } = response.data;
 
-    const image = await MessageMedia.fromUrl(url[0], {
+    const image = await MessageMedia.fromUrl(url, {
       unsafeMime: true,
     });
     return client.sendMessage(message.from, image);
