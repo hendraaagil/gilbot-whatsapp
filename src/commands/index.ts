@@ -14,9 +14,7 @@ import { receh } from './receh';
 import { sholat } from './sholat';
 import { stiker } from './stiker';
 import { tentang } from './tentang';
-import { threads } from './threads';
 import { tiktok } from './tiktok';
-import { upscale } from './upscale';
 import { waifu } from './waifu';
 
 export const commands = {
@@ -36,8 +34,6 @@ export const commands = {
   sholat,
   stiker,
   tentang,
-  threads,
   tiktok,
-  upscale,
   waifu,
 };

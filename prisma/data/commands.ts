@@ -37,12 +37,6 @@ export const commands: Prisma.CommandCreateInput[] = [
     minuteLimit: 10,
   },
   {
-    name: 'threads',
-    description: 'download gambar / video Threads',
-    requireLock: true,
-    minuteLimit: 10,
-  },
-  {
     name: 'tiktok',
     description: 'download video TikTok tanpa watermark',
     requireLock: true,

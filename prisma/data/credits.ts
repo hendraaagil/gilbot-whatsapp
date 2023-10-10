@@ -3,7 +3,6 @@ import { Prisma } from '@prisma/client';
 export const credits: Prisma.CreditCreateInput[] = [
   { name: 'BMKG', link: 'https://data.bmkg.go.id/' },
   { name: 'TiklyDown API', link: 'https://api.tiklydown.me/' },
-  { name: 'Threads API', link: 'https://threads.junho.io/' },
   { name: 'The Cat API', link: 'https://thecatapi.com/' },
   { name: 'Candaan API', link: 'https://candaan-api.vercel.app/' },
   { name: 'SnapSave', link: 'https://snapsave.app/download-video-instagram' },
