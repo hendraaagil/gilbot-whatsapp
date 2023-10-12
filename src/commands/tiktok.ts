@@ -60,6 +60,14 @@ const downloadVideo = async (
       };
     }
 
+    if (error?.response?.status >= 500) {
+      return {
+        isSuccess: false,
+        message:
+          '⚠️ Terdapat kesalahan pada server.\nPerintah tidak dapat digunakan untuk saat ini.',
+      };
+    }
+
     return {
       isSuccess: false,
       message: '⚠️ Terdapat kesalahan saat mendownload video.',
