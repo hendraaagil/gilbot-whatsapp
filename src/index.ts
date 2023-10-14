@@ -1,6 +1,8 @@
 import qrCode from 'qrcode-terminal';
 import { Client, LocalAuth } from 'whatsapp-web.js';
+
 import { listenMessages } from './events';
+import { checkUnreplyChatsCron } from './libs/cron';
 
 const client = new Client({
   authStrategy: new LocalAuth(),
@@ -21,6 +23,8 @@ client.on('ready', () => {
 
   console.log('Client is ready!');
   console.log(`Logged in as: ${pushname} | ${user}`);
+
+  checkUnreplyChatsCron(client);
 });
 
 client.on('change_state', (state) => {
