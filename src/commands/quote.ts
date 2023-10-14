@@ -2,15 +2,19 @@ import { Client, Message } from 'whatsapp-web.js';
 
 import axios from '../libs/axios';
 import { PREFIX } from '../constants';
+import { randomInteger } from '../libs/generate';
 
 export const quote = {
   command: PREFIX + 'quote',
   execute: async (message: Message, client: Client) => {
     await client.sendMessage(message.from, '🔎 Lagi nyari quote...');
 
-    const response = await axios.get('https://kyoko.rei.my.id/api/quotes.php');
-    const { apiResult } = response.data;
-    const { english, indo, character, anime } = apiResult[0];
+    const response = await axios.get(
+      'https://katanime.vercel.app/api/getrandom'
+    );
+    const { result } = response.data;
+    const { english, indo, character, anime } =
+      result[randomInteger(0, result.length)];
     const quote = `${indo}\n---\n_${english}_\n\n*~ ${character}*, ${anime}`;
 
     client.sendMessage(message.from, quote);

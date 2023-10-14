@@ -5,6 +5,7 @@ export const credits: Prisma.CreditCreateInput[] = [
   { name: 'TiklyDown API', link: 'https://api.tiklydown.me/' },
   { name: 'The Cat API', link: 'https://thecatapi.com/' },
   { name: 'Candaan API', link: 'https://candaan-api.vercel.app/' },
+  { name: 'Katanime', link: 'https://katanime.vercel.app/' },
   { name: 'SnapSave', link: 'https://snapsave.app/download-video-instagram' },
   { name: 'waifu.pics', link: 'https://waifu.pics/' },
   {
