@@ -13,8 +13,9 @@ export const quote = {
       'https://katanime.vercel.app/api/getrandom'
     );
     const { result } = response.data;
-    const { english, indo, character, anime } =
-      result[randomInteger(0, result.length)];
+    const index = randomInteger(0, result.length - 1);
+
+    const { english, indo, character, anime } = result[index];
     const quote = `${indo}\n---\n_${english}_\n\n*~ ${character}*, ${anime}`;
 
     client.sendMessage(message.from, quote);
