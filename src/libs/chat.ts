@@ -1,5 +1,5 @@
 import { differenceInMinutes } from 'date-fns';
-import { Chat, Client } from 'whatsapp-web.js';
+import { Chat, Client, MessageTypes } from 'whatsapp-web.js';
 
 import { commands } from '../commands';
 
@@ -17,7 +17,12 @@ export const checkUnreplyChats = async (client: Client) => {
     if (
       lastMessage.from !== '0@c.us' &&
       !lastMessage.fromMe &&
-      diffMinutes > 10
+      diffMinutes > 10 &&
+      ![
+        MessageTypes.REACTION,
+        MessageTypes.BROADCAST_NOTIFICATION,
+        MessageTypes.E2E_NOTIFICATION,
+      ].includes(lastMessage.type)
     ) {
       unreplyChats.push(chat);
     }
