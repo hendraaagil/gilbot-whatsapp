@@ -2,7 +2,7 @@ import puppeteer, { Browser } from 'puppeteer';
 import { InstaResult } from '../types/insta';
 
 export const instaSave = async (
-  link: string
+  link: string,
 ): Promise<{
   isValid: boolean;
   data?: InstaResult[];
@@ -46,12 +46,12 @@ export const instaSave = async (
 
     await page.waitForSelector(
       '#download-section .download-items .download-items__btn > a',
-      { timeout: 60000 }
+      { timeout: 60000 },
     );
 
     const items: InstaResult[] = [];
     const elements = await page.$$(
-      '#download-section .download-items .download-items__btn > a'
+      '#download-section .download-items .download-items__btn > a',
     );
 
     let count = 1;
@@ -60,7 +60,9 @@ export const instaSave = async (
 
       const matchHref = href.match(/\/([^\s\?]+)/) as RegExpMatchArray;
       const domain = matchHref[1].split('/')[1];
-      const type = domain === 'snapxcdn.com' ? 'video' : 'image';
+      const type = ['snapxcdn.com', 'd.rapidcdn.app'].includes(domain)
+        ? 'video'
+        : 'image';
 
       items.push({
         name: identifier + '_' + count,
