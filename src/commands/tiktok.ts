@@ -16,7 +16,7 @@ enum MediaType {
 }
 
 const downloadVideo = async (
-  link: string
+  link: string,
 ): Promise<{
   isSuccess: boolean;
   message: string;
@@ -31,7 +31,7 @@ const downloadVideo = async (
 }> => {
   try {
     const response = await axios.get<ApiTiklyDownResponse>(
-      'https://api.tiklydown.me/api/download?url=' + link
+      'https://api.tiklydown.eu.org/api/download?url=' + link,
     );
     const data = {
       authorId: response.data.author.unique_id,
