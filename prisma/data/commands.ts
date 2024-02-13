@@ -43,6 +43,12 @@ export const commands: Prisma.CommandCreateInput[] = [
     minuteLimit: 10,
   },
   {
+    name: 'twitter',
+    description: 'download media Twitter (X) post',
+    requireLock: true,
+    minuteLimit: 10,
+  },
+  {
     name: 'rangkum',
     description: 'merangkum video YouTube ke dalam teks bahasa inggris',
     requireLock: true,

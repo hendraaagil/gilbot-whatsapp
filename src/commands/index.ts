@@ -15,6 +15,7 @@ import { sholat } from './sholat';
 import { stiker } from './stiker';
 import { tentang } from './tentang';
 import { tiktok } from './tiktok';
+import { twitter } from './twitter';
 import { waifu } from './waifu';
 
 export const commands = {
@@ -35,5 +36,6 @@ export const commands = {
   stiker,
   tentang,
   tiktok,
+  twitter,
   waifu,
 };
