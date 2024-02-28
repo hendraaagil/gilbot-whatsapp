@@ -1,6 +1,7 @@
 name: Deployment
 
 on:
+  workflow_dispatch: # Manually trigger a workflow run
   push:
     branches: [main]
 
