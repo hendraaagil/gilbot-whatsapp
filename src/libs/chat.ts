@@ -9,6 +9,8 @@ export const checkUnreplyChats = async (client: Client) => {
 
   chats.map((chat) => {
     const lastMessage = chat.lastMessage;
+    if (!lastMessage) return;
+
     const diffMinutes = differenceInMinutes(
       new Date(),
       new Date(lastMessage.timestamp * 1000)
