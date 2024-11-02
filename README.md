@@ -2,7 +2,7 @@
 
 This is the source code for the WhatsApp bot. Since there is an issue with the WhatsApp policy, I make this project open source. Feel free to deploy on your own or add more features. Don't forget to give credit to this repository.
 
-<img src="img/ban.jpg" alt="Ban message from WhatsApp" style="max-width: 150px" />
+<img src="img/ban.jpg" alt="Ban message from WhatsApp" width="200" />
 
 ## Project Structure
 
