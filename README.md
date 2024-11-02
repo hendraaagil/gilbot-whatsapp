@@ -2,7 +2,7 @@
 
 This is the source code for the WhatsApp bot. Since there is an issue with the WhatsApp policy, I make this project open source. Feel free to deploy on your own or add more features. Don't forget to give credit to this repository.
 
-<img src="img/ban.jpg" alt="Ban message from WhatsApp" style="max-width: 250px" />
+<img src="img/ban.jpg" alt="Ban message from WhatsApp" style="max-width: 150px" />
 
 ## Project Structure
 
@@ -38,7 +38,7 @@ Store type definition files.
 
 ## Command flow
 
-If you checked on the all files in [commands](src/commands) folder, the command separated into 2 types:
+If you checked on the all files in [commands](src/commands) folder, the command is separated into 2 types:
 
 - Command without `requireLock`
 
@@ -70,3 +70,11 @@ If you checked on the all files in [commands](src/commands) folder, the command 
   ```
 
 This `requireLock` configuration can be found in the [prisma data](prisma/data/commands.ts).
+
+## Development setup
+
+This project require Node.js version `>=16.x` and `yarn` package manager. All available scripts can be found in [package.json](package.json)
+
+## License
+
+This project is under [MIT License](LICENSE).
